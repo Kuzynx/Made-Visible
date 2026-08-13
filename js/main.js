@@ -378,6 +378,23 @@
   }
 
   /* ----------------------------------------------------------
+     Brand wall — generate the blurred MADE VISIBLE pattern
+     ---------------------------------------------------------- */
+  const wallPattern = document.querySelector(".brand-wall__pattern");
+  if (wallPattern) {
+    const ROWS = 10;
+    for (let i = 0; i < ROWS; i++) {
+      const row = document.createElement("div");
+      row.className = "brand-wall__row";
+      row.textContent = Array(14).fill("MADE VISIBLE").join("  ");
+      row.style.marginLeft = `-${(i % 4) * 4 + 1}rem`;
+      row.style.filter = `blur(${1.5 + ((i * 7) % 5) * 0.8}px)`;
+      row.style.opacity = String(0.45 + ((i * 3) % 5) * 0.11);
+      wallPattern.appendChild(row);
+    }
+  }
+
+  /* ----------------------------------------------------------
      Inquiry form (front-end only — wire to a backend/service)
      ---------------------------------------------------------- */
   const form = document.querySelector(".inquiry-form form");

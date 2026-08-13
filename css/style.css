@@ -10,6 +10,7 @@
   --ivory: #F2EFE7;
   --stone: #AAA69D;
   --champagne: #C6AE82;
+  --crimson: #7D0000;
   --charcoal: #1B1B1B;
   --charcoal-soft: #161616;
   --line: rgba(242, 239, 231, 0.08);
@@ -792,6 +793,144 @@ h1, h2, h3, h4 {
 }
 
 /* ------------------------------------------------------------
+   Brand wall — blurred MADE VISIBLE pattern, crimson splash,
+   client brand names ringed around it
+   ------------------------------------------------------------ */
+
+.brand-wall-section { position: relative; overflow: hidden; }
+
+.brand-wall-wrap {
+  position: relative;
+  max-width: 76rem;
+  margin-inline: auto;
+}
+
+.brand-wall {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  border-radius: 6px;
+  overflow: hidden;
+  background: #0C0B09;
+  border: 1px solid var(--line);
+}
+
+.brand-wall__pattern {
+  position: absolute;
+  inset: -6%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  pointer-events: none;
+  -webkit-mask-image: radial-gradient(ellipse 78% 72% at 50% 50%, black 25%, transparent 80%);
+  mask-image: radial-gradient(ellipse 78% 72% at 50% 50%, black 25%, transparent 80%);
+}
+.brand-wall__row {
+  display: flex;
+  gap: 3.5rem;
+  white-space: nowrap;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.32em;
+  font-size: clamp(0.7rem, 1.5vw, 1.05rem);
+  color: rgba(198, 174, 130, 0.34);
+  will-change: filter;
+}
+.brand-wall__row:nth-child(even) { color: rgba(170, 166, 157, 0.26); }
+
+.brand-wall__splash {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 90%;
+  aspect-ratio: 2 / 1;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(ellipse at center,
+    rgba(125, 0, 0, 0.65),
+    rgba(125, 0, 0, 0.28) 45%,
+    transparent 72%);
+  filter: blur(28px);
+  mix-blend-mode: screen;
+  pointer-events: none;
+}
+
+.brand-wall__center {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1.2rem;
+  text-align: center;
+  padding-inline: 1rem;
+}
+.brand-wall__logo {
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.45em;
+  text-indent: 0.45em; /* balances the trailing letter-space */
+  font-size: clamp(1.3rem, 4.2vw, 3.2rem);
+  color: var(--ivory);
+  text-shadow: 0 0 60px rgba(125, 0, 0, 0.55);
+}
+.brand-wall__tag {
+  font-size: clamp(0.6rem, 1.1vw, 0.8rem);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.42em;
+  text-indent: 0.42em;
+  color: var(--champagne);
+}
+
+.brand-ring {
+  font-size: 0.78rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.22em;
+  color: var(--stone);
+}
+.brand-ring li {
+  white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  transition: color 0.35s ease;
+}
+.brand-ring li::before {
+  content: "";
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--crimson);
+  box-shadow: 0 0 8px 1px rgba(125, 0, 0, 0.9);
+  flex-shrink: 0;
+}
+.brand-ring li:hover { color: var(--ivory); }
+
+@media (min-width: 901px) {
+  .brand-wall-wrap { padding: 4.5rem 11rem 4rem; }
+  .brand-ring li { position: absolute; }
+  .brand-ring li:nth-child(1) { top: 2rem; left: 16%; }
+  .brand-ring li:nth-child(2) { top: 0.5rem; left: 50%; transform: translateX(-50%); }
+  .brand-ring li:nth-child(3) { top: 2rem; right: 16%; }
+  .brand-ring li:nth-child(4) { top: 34%; left: 0; }
+  .brand-ring li:nth-child(5) { top: 34%; right: 0; }
+  .brand-ring li:nth-child(6) { top: 58%; left: 0.5rem; }
+  .brand-ring li:nth-child(7) { top: 58%; right: 0.5rem; }
+  .brand-ring li:nth-child(8) { bottom: 0.5rem; left: 22%; }
+  .brand-ring li:nth-child(9) { bottom: 0.5rem; right: 22%; }
+}
+@media (max-width: 900px) {
+  .brand-ring {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1rem 1.75rem;
+    margin-top: 2.25rem;
+  }
+}
+
+/* ------------------------------------------------------------
    Pillars (Why choose us)
    ------------------------------------------------------------ */
 
@@ -859,7 +998,9 @@ h1, h2, h3, h4 {
   width: min(60rem, 120vw);
   aspect-ratio: 2 / 1;
   transform: translate(-50%, -50%);
-  background: radial-gradient(ellipse at center, rgba(198, 174, 130, 0.13), transparent 65%);
+  background:
+    radial-gradient(ellipse 70% 80% at 38% 55%, rgba(125, 0, 0, 0.16), transparent 60%),
+    radial-gradient(ellipse at center, rgba(198, 174, 130, 0.13), transparent 65%);
   pointer-events: none;
 }
 .cta-section .label { justify-content: center; margin-bottom: 2rem; }
