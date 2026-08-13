@@ -197,17 +197,19 @@ html.has-cursor input, html.has-cursor textarea { cursor: text !important; }
   width: 8px; height: 8px;
   border-radius: 50%;
   background: var(--champagne);
+  /* thin dark halo keeps the dot visible on ivory surfaces
+     (blend-mode inversion made it turn navy there) */
+  box-shadow: 0 0 0 1px rgba(10, 10, 10, 0.35);
   pointer-events: none;
-  z-index: 150;
+  z-index: 300; /* above the preloader so the cursor never disappears */
   transform: translate(-50%, -50%);
   transition: width 0.3s var(--ease-out), height 0.3s var(--ease-out), opacity 0.3s;
-  mix-blend-mode: difference;
 }
 .cursor--ring {
   width: 36px; height: 36px;
   background: transparent;
   border: 1px solid rgba(198, 174, 130, 0.5);
-  mix-blend-mode: normal;
+  box-shadow: none;
   /* no transform transition: position is driven per-frame by JS,
      and a transition on top of it causes stutter */
   transition: width 0.3s var(--ease-out), height 0.3s var(--ease-out),

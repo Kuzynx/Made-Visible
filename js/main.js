@@ -117,9 +117,6 @@
   const dot = document.querySelector(".cursor--dot");
   const ring = document.querySelector(".cursor--ring");
   if (dot && ring && window.matchMedia("(hover: hover) and (pointer: fine)").matches) {
-    // Hide the native cursor only now that the custom one is live
-    document.documentElement.classList.add("has-cursor");
-
     let mx = -100, my = -100, rx = -100, ry = -100;
     let seen = false;
     let overText = false; // pointer is over an input/textarea (native I-beam zone)
@@ -131,12 +128,19 @@
 
     window.addEventListener("mousemove", (e) => {
       mx = e.clientX; my = e.clientY;
-      if (!seen) { seen = true; rx = mx; ry = my; if (!overText) setHidden(false); }
+      if (!seen) {
+        seen = true;
+        rx = mx; ry = my;
+        // Only hide the native cursor once the custom one has a real
+        // position — a stationary pointer keeps the OS arrow until then
+        document.documentElement.classList.add("has-cursor");
+        if (!overText) setHidden(false);
+      }
     }, { passive: true });
 
     (function cursorLoop() {
-      rx += (mx - rx) * 0.16;
-      ry += (my - ry) * 0.16;
+      rx += (mx - rx) * 0.22;
+      ry += (my - ry) * 0.22;
       dot.style.transform = `translate(${mx}px, ${my}px) translate(-50%, -50%)`;
       ring.style.transform = `translate(${rx}px, ${ry}px) translate(-50%, -50%)`;
       requestAnimationFrame(cursorLoop);
