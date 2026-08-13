@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en" class="no-js">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Make Me Visible — Made Visible</title>
+  <meta name="description" content="Ready to be visible? Tell us where your business is today. We’ll talk about where you want it to be tomorrow.">
+
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500;1,600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <div class="preloader">
+    <div class="preloader__logo"><span>MADE&nbsp;</span><span class="champagne">VISIBLE</span></div>
+  </div>
+
+  <div class="cursor cursor--dot"></div>
+  <div class="cursor cursor--ring"></div>
+
+  <header class="site-header">
+    <div class="container site-header__inner">
+      <a href="index.html" class="logo">MADE <em>VISIBLE</em></a>
+      <nav class="site-nav" aria-label="Primary">
+        <a href="index.html">Home</a>
+        <a href="what-we-make-visible.html">What We Make Visible</a>
+        <a href="why-choose-us.html">Why Choose Us</a>
+        <a href="clients.html">Clients Made Visible</a>
+        <a href="about.html">About</a>
+      </nav>
+      <a href="make-me-visible.html" class="btn btn--nav">Make Me Visible <span class="arrow">↗</span></a>
+      <button class="menu-toggle" aria-label="Open menu" aria-expanded="false"><span></span><span></span></button>
+    </div>
+  </header>
+
+  <div class="mobile-menu">
+    <a href="index.html"><span class="num">01</span> Home</a>
+    <a href="what-we-make-visible.html"><span class="num">02</span> What We Make Visible</a>
+    <a href="why-choose-us.html"><span class="num">03</span> Why Choose Us</a>
+    <a href="clients.html"><span class="num">04</span> Clients Made Visible</a>
+    <a href="about.html"><span class="num">05</span> About</a>
+    <a href="make-me-visible.html" class="is-active"><span class="num">06</span> Make Me Visible ↗</a>
+  </div>
+
+  <main>
+
+    <section class="page-hero">
+      <div class="container">
+        <p class="label">05 / Contact</p>
+        <h1 class="display-xl page-hero__title" data-reveal-line>
+          <span class="line"><span>Ready to be</span></span>
+          <span class="line"><span><em class="serif champagne">visible?</em></span></span>
+        </h1>
+        <p class="lead" data-reveal>
+          Tell us where your business is today. We’ll talk about where you want it
+          to be tomorrow.
+        </p>
+      </div>
+    </section>
+
+    <section class="section section--line-top">
+      <div class="container contact-grid">
+
+        <aside class="contact-aside" data-reveal>
+          <p class="label" style="margin-bottom:1.75rem;">What happens next</p>
+          <p>
+            Within one business day, we’ll reach out to schedule a conversation about your
+            business — where it stands, what it needs, and what visibility would look like for you.
+            No packages. No pressure. A partnership starts with a conversation.
+          </p>
+          <div class="contact-line">
+            <span>Email</span>
+            <a href="mailto:hello@madevisible.agency">hello@madevisible.agency</a>
+          </div>
+          <div class="contact-line">
+            <span>Follow</span>
+            <div class="contact-line__links">
+              <a href="#">Instagram</a><span class="sep">·</span><a href="#">LinkedIn</a><span class="sep">·</span><a href="#">TikTok</a>
+            </div>
+          </div>
+        </aside>
+
+        <div class="inquiry-form" data-reveal data-reveal-delay="0.1">
+          <form novalidate>
+            <div class="form-row">
+              <div class="field">
+                <label for="f-name">Name</label>
+                <input type="text" id="f-name" name="name" placeholder="Your name" required>
+              </div>
+              <div class="field">
+                <label for="f-business">Business Name</label>
+                <input type="text" id="f-business" name="business" placeholder="Your business">
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="field">
+                <label for="f-email">Email</label>
+                <input type="email" id="f-email" name="email" placeholder="you@business.com" required>
+              </div>
+              <div class="field">
+                <label for="f-phone">Phone</label>
+                <input type="tel" id="f-phone" name="phone" placeholder="+1 (___) ___-____">
+              </div>
+            </div>
+            <div class="field">
+              <label for="f-website">Website</label>
+              <input type="url" id="f-website" name="website" placeholder="https://">
+            </div>
+            <div class="form-row">
+              <div class="field">
+                <label for="f-needs">What does your business need?</label>
+                <select id="f-needs" name="needs">
+                  <option value="" selected>Select a focus</option>
+                  <option>Website Design &amp; Development</option>
+                  <option>SEO &amp; Search Optimization</option>
+                  <option>Branding &amp; Creative Direction</option>
+                  <option>Content Creation</option>
+                  <option>Photography &amp; Videography</option>
+                  <option>Social Media</option>
+                  <option>Digital Advertising</option>
+                  <option>Marketing Strategy</option>
+                  <option>Analytics &amp; Growth</option>
+                  <option>Everything — full-service</option>
+                </select>
+              </div>
+              <div class="field">
+                <label for="f-budget">Estimated Budget</label>
+                <select id="f-budget" name="budget">
+                  <option value="" selected>Select a range</option>
+                  <option>Under $2,500 / month</option>
+                  <option>$2,500 – $5,000 / month</option>
+                  <option>$5,000 – $10,000 / month</option>
+                  <option>$10,000+ / month</option>
+                  <option>One-time project</option>
+                </select>
+              </div>
+            </div>
+            <div class="field">
+              <label for="f-message">Tell us about your business / project</label>
+              <textarea id="f-message" name="message" placeholder="Where is your business today — and where do you want it to be?"></textarea>
+            </div>
+            <button type="submit" class="btn" style="margin-top:0.5rem;">Make Me Visible <span class="arrow">↗</span></button>
+          </form>
+
+          <div class="form-success" role="status">
+            <p class="serif">Consider it seen.</p>
+            <p>Thank you — your inquiry has been received. We’ll be in touch within one business day.</p>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- QUOTE -->
+    <section class="section section--line-top">
+      <div class="container">
+        <div class="quote-block" data-reveal>
+          <blockquote>“Not a package.<br><span class="champagne">A partnership.</span>”</blockquote>
+          <cite>Made Visible</cite>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <div class="site-footer__grid">
+        <div class="site-footer__brand">
+          <a href="index.html" class="logo">MADE <em>VISIBLE</em></a>
+          <p>A full-service marketing agency. Strategy, design and content built around the most important part of your business — you.</p>
+        </div>
+        <div>
+          <h4>Navigate</h4>
+          <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="what-we-make-visible.html">What We Make Visible</a></li>
+            <li><a href="why-choose-us.html">Why Choose Us</a></li>
+            <li><a href="clients.html">Clients Made Visible</a></li>
+            <li><a href="about.html">About</a></li>
+            <li><a href="make-me-visible.html">Make Me Visible</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>Connect</h4>
+          <ul>
+            <li><a href="mailto:hello@madevisible.agency">hello@madevisible.agency</a></li>
+            <li><a href="#">Instagram</a></li>
+            <li><a href="#">LinkedIn</a></li>
+            <li><a href="#">TikTok</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="site-footer__bottom">
+        <span>© <span data-year>2026</span> Made Visible</span>
+        <span>Seen · Known · Growth</span>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/vendor/lenis.min.js"></script>
+  <script src="js/vendor/gsap.min.js"></script>
+  <script src="js/vendor/ScrollTrigger.min.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>
