@@ -1027,6 +1027,132 @@ html.has-cursor input, html.has-cursor textarea { cursor: text !important; }
 }
 
 /* ------------------------------------------------------------
+   Growth results — social case study cards (1-year TikTok growth)
+   ------------------------------------------------------------ */
+
+.growth-handle {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.7rem;
+  border: 1px solid rgba(198, 174, 130, 0.45);
+  border-radius: 999px;
+  padding: 0.7rem 1.5rem;
+  font-size: 0.92rem;
+  font-weight: 500;
+  color: var(--ivory);
+}
+.growth-handle svg { width: 1.05rem; height: 1.05rem; color: var(--champagne); }
+
+.growth-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 17rem), 1fr));
+  gap: clamp(1.25rem, 2.5vw, 2rem);
+}
+
+.growth-card {
+  border: 1px solid rgba(198, 174, 130, 0.3);
+  border-radius: 16px;
+  padding: clamp(1.75rem, 3vw, 2.5rem) clamp(1.25rem, 2vw, 1.75rem);
+  background: linear-gradient(180deg, rgba(27, 27, 27, 0.85), rgba(16, 15, 13, 0.95));
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+  transition: border-color 0.5s ease, transform 0.5s var(--ease-out);
+}
+.growth-card:hover { border-color: rgba(198, 174, 130, 0.55); transform: translateY(-4px); }
+
+.growth-card__icon {
+  width: 3.6rem;
+  height: 3.6rem;
+  border: 1px solid rgba(198, 174, 130, 0.5);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--champagne);
+}
+.growth-card__icon svg { width: 1.5rem; height: 1.5rem; }
+
+.growth-card__label {
+  width: 100%;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  padding-bottom: 1.2rem;
+  border-bottom: 1px solid var(--line);
+}
+
+.growth-card__compare {
+  display: flex;
+  align-items: stretch;
+  justify-content: center;
+  gap: clamp(1rem, 2vw, 1.75rem);
+  width: 100%;
+}
+.growth-card__half { flex: 1; display: flex; flex-direction: column; gap: 0.3rem; }
+.growth-card__half .tag {
+  font-size: 0.62rem;
+  font-weight: 500;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--stone);
+}
+.growth-card__half .val {
+  font-family: var(--font-serif);
+  font-style: normal;
+  font-weight: 600;
+  font-size: clamp(1.7rem, 3vw, 2.3rem);
+  line-height: 1.1;
+  color: var(--stone);
+}
+.growth-card__half--after .tag { color: var(--champagne); }
+.growth-card__half--after .val { color: var(--ivory); }
+.growth-card__half .unit {
+  font-size: 0.62rem;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  color: var(--stone);
+}
+.growth-card__divider { width: 1px; background: var(--line-strong); }
+
+.growth-card__chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.9rem;
+  border: 1px solid rgba(198, 174, 130, 0.4);
+  border-radius: 12px;
+  padding: 0.85rem 1.4rem;
+  color: var(--champagne);
+}
+.growth-card__chip svg { width: 1.3rem; height: 1.3rem; flex-shrink: 0; }
+.growth-card__chip .pct {
+  font-weight: 600;
+  font-size: clamp(1.15rem, 2vw, 1.5rem);
+  line-height: 1.1;
+  white-space: nowrap;
+}
+.growth-card__chip .pct small {
+  display: block;
+  font-size: 0.58rem;
+  font-weight: 500;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  margin-top: 0.25rem;
+}
+
+.growth-note {
+  margin-top: clamp(2.5rem, 5vw, 3.5rem);
+  text-align: center;
+  color: var(--stone);
+  font-size: 0.85rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+/* ------------------------------------------------------------
    Pillars (Why choose us)
    ------------------------------------------------------------ */
 
@@ -1246,6 +1372,14 @@ html.has-cursor input, html.has-cursor textarea { cursor: text !important; }
   color: #C4735C;
   letter-spacing: 0.04em;
 }
+
+.form-alert {
+  margin-top: 1.25rem;
+  font-size: 0.88rem;
+  color: #C4735C;
+}
+.form-alert a { text-decoration: underline; text-underline-offset: 3px; }
+.form-alert a:hover { color: var(--ivory); }
 
 .contact-line__links { display: flex; align-items: baseline; gap: 0.75rem; flex-wrap: wrap; }
 .contact-line__links .sep { color: var(--stone); }

@@ -498,12 +498,50 @@
         return;
       }
 
-      form.style.display = "none";
-      const success = document.querySelector(".form-success");
-      if (success) {
-        success.classList.add("is-visible");
-        success.scrollIntoView({ behavior: prefersReducedMotion ? "auto" : "smooth", block: "center" });
-      }
+      const showSuccess = () => {
+        form.style.display = "none";
+        const success = document.querySelector(".form-success");
+        if (success) {
+          success.classList.add("is-visible");
+          success.scrollIntoView({ behavior: prefersReducedMotion ? "auto" : "smooth", block: "center" });
+        }
+      };
+
+      // Honeypot filled → a bot; pretend it worked and send nothing
+      const honey = form.querySelector('[name="_honey"]');
+      if (honey && honey.value) { showSuccess(); return; }
+
+      const submitBtn = form.querySelector('button[type="submit"]');
+      const alertBox = form.querySelector(".form-alert");
+      if (alertBox) alertBox.remove();
+
+      const setSending = (sending) => {
+        if (!submitBtn) return;
+        submitBtn.disabled = sending;
+        submitBtn.style.opacity = sending ? "0.6" : "";
+        submitBtn.innerHTML = sending
+          ? "Sending\u2026"
+          : 'Make Me Visible <span class="arrow">\u2197</span>';
+      };
+
+      setSending(true);
+      fetch(form.action, {
+        method: "POST",
+        body: new FormData(form),
+        headers: { Accept: "application/json" },
+      })
+        .then((res) => {
+          if (!res.ok) throw new Error("send failed");
+          showSuccess();
+        })
+        .catch(() => {
+          setSending(false);
+          const alert = document.createElement("p");
+          alert.className = "form-alert";
+          alert.setAttribute("role", "alert");
+          alert.innerHTML = "Something went wrong sending your inquiry. Please try again, or email us directly at <a href=\"mailto:madevisiblemv@gmail.com\">madevisiblemv@gmail.com</a>.";
+          form.appendChild(alert);
+        });
     });
   }
 
