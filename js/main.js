@@ -15,9 +15,20 @@
      Preloader
      ---------------------------------------------------------- */
   const preloader = document.querySelector(".preloader");
-  window.addEventListener("load", () => {
-    setTimeout(() => preloader && preloader.classList.add("is-done"), 650);
-  });
+  let seenIntro = false;
+  try { seenIntro = !!sessionStorage.getItem("mv-intro"); } catch (e) { /* storage unavailable */ }
+  if (preloader && seenIntro) {
+    // Returning within the session: skip the intro instead of replaying it on every page
+    preloader.style.transitionDuration = "0.3s";
+    preloader.classList.add("is-done");
+  } else {
+    window.addEventListener("load", () => {
+      setTimeout(() => {
+        preloader && preloader.classList.add("is-done");
+        try { sessionStorage.setItem("mv-intro", "1"); } catch (e) { /* ignore */ }
+      }, 650);
+    });
+  }
   // Safety: never trap the user behind the preloader
   setTimeout(() => preloader && preloader.classList.add("is-done"), 3000);
 
@@ -62,21 +73,42 @@
   const toggle = document.querySelector(".menu-toggle");
   const mobileMenu = document.querySelector(".mobile-menu");
   if (toggle && mobileMenu) {
-    toggle.addEventListener("click", () => {
-      const open = mobileMenu.classList.toggle("is-open");
+    const setMenu = (open) => {
+      mobileMenu.classList.toggle("is-open", open);
       toggle.classList.toggle("is-open", open);
       toggle.setAttribute("aria-expanded", String(open));
+      toggle.setAttribute("aria-label", open ? "Close menu" : "Open menu");
       document.body.style.overflow = open ? "hidden" : "";
       if (lenis) open ? lenis.stop() : lenis.start();
+    };
+    toggle.addEventListener("click", () => setMenu(!mobileMenu.classList.contains("is-open")));
+    mobileMenu.querySelectorAll("a").forEach((a) => a.addEventListener("click", () => setMenu(false)));
+    window.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && mobileMenu.classList.contains("is-open")) setMenu(false);
     });
-    mobileMenu.querySelectorAll("a").forEach((a) =>
-      a.addEventListener("click", () => {
-        mobileMenu.classList.remove("is-open");
-        toggle.classList.remove("is-open");
-        document.body.style.overflow = "";
-        if (lenis) lenis.start();
-      })
-    );
+  }
+
+  /* ----------------------------------------------------------
+     Placeholder links (social profiles not yet created):
+     don't jump to the top of the page on click
+     ---------------------------------------------------------- */
+  document.querySelectorAll('a[href="#"]').forEach((a) => {
+    a.setAttribute("aria-disabled", "true");
+    if (!a.title) a.title = "Profile coming soon";
+    a.addEventListener("click", (e) => e.preventDefault());
+  });
+
+  /* ----------------------------------------------------------
+     Hero scroll cue — click to scroll past the hero
+     ---------------------------------------------------------- */
+  const scrollCue = document.querySelector(".hero__scroll");
+  if (scrollCue) {
+    scrollCue.addEventListener("click", () => {
+      const hero = document.querySelector(".hero");
+      const target = hero ? hero.offsetHeight : window.innerHeight;
+      if (lenis) lenis.scrollTo(target);
+      else window.scrollTo({ top: target, behavior: "smooth" });
+    });
   }
 
   /* ----------------------------------------------------------
@@ -350,11 +382,61 @@
      ---------------------------------------------------------- */
   const form = document.querySelector(".inquiry-form form");
   if (form) {
+    const fail = (input, msg) => {
+      const field = input.closest(".field");
+      if (!field) return;
+      field.classList.add("is-error");
+      const err = document.createElement("span");
+      err.className = "field-error";
+      err.textContent = msg;
+      field.appendChild(err);
+    };
+    const clearError = (input) => {
+      const field = input.closest(".field");
+      if (!field) return;
+      field.classList.remove("is-error");
+      const err = field.querySelector(".field-error");
+      if (err) err.remove();
+    };
+    form.querySelectorAll("input, select, textarea").forEach((el) =>
+      el.addEventListener("input", () => clearError(el))
+    );
+
     form.addEventListener("submit", (e) => {
       e.preventDefault();
+      form.querySelectorAll(".field.is-error").forEach((f) => {
+        f.classList.remove("is-error");
+        const err = f.querySelector(".field-error");
+        if (err) err.remove();
+      });
+
+      const name = form.querySelector("#f-name");
+      const email = form.querySelector("#f-email");
+      const website = form.querySelector("#f-website");
+      let ok = true;
+
+      if (name && !name.value.trim()) { fail(name, "Please tell us your name."); ok = false; }
+      if (email) {
+        const v = email.value.trim();
+        if (!v) { fail(email, "Please enter your email."); ok = false; }
+        else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)) { fail(email, "That email address doesn’t look right."); ok = false; }
+      }
+      if (website && website.value.trim() && !/^(https?:\/\/)?[^\s]+\.[^\s]{2,}$/i.test(website.value.trim())) {
+        fail(website, "That website address doesn’t look right."); ok = false;
+      }
+
+      if (!ok) {
+        const first = form.querySelector(".field.is-error input, .field.is-error select, .field.is-error textarea");
+        if (first) first.focus();
+        return;
+      }
+
       form.style.display = "none";
       const success = document.querySelector(".form-success");
-      if (success) success.classList.add("is-visible");
+      if (success) {
+        success.classList.add("is-visible");
+        success.scrollIntoView({ behavior: prefersReducedMotion ? "auto" : "smooth", block: "center" });
+      }
     });
   }
 
