@@ -185,6 +185,12 @@ h1, h2, h3, h4 {
    Custom cursor
    ------------------------------------------------------------ */
 
+/* Native cursor is hidden only once JS activates the custom one
+   (html.has-cursor), so a script failure never leaves users cursorless.
+   Text fields keep the native I-beam for precise caret placement. */
+html.has-cursor, html.has-cursor * { cursor: none !important; }
+html.has-cursor input, html.has-cursor textarea { cursor: text !important; }
+
 .cursor {
   position: fixed;
   top: 0; left: 0;
@@ -202,10 +208,16 @@ h1, h2, h3, h4 {
   background: transparent;
   border: 1px solid rgba(198, 174, 130, 0.5);
   mix-blend-mode: normal;
-  transition: transform 0.15s ease-out, width 0.3s var(--ease-out), height 0.3s var(--ease-out);
+  /* no transform transition: position is driven per-frame by JS,
+     and a transition on top of it causes stutter */
+  transition: width 0.3s var(--ease-out), height 0.3s var(--ease-out),
+    opacity 0.3s, border-color 0.3s;
 }
 .cursor.is-hover { width: 14px; height: 14px; }
 .cursor--ring.is-hover { width: 56px; height: 56px; }
+.cursor--ring.is-pressed { width: 26px; height: 26px; border-color: var(--champagne); }
+.cursor--ring.is-hover.is-pressed { width: 44px; height: 44px; }
+.cursor.is-hidden { opacity: 0; }
 @media (hover: none), (pointer: coarse) { .cursor, .cursor--ring { display: none; } }
 
 /* ------------------------------------------------------------

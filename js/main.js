@@ -117,8 +117,23 @@
   const dot = document.querySelector(".cursor--dot");
   const ring = document.querySelector(".cursor--ring");
   if (dot && ring && window.matchMedia("(hover: hover) and (pointer: fine)").matches) {
+    // Hide the native cursor only now that the custom one is live
+    document.documentElement.classList.add("has-cursor");
+
     let mx = -100, my = -100, rx = -100, ry = -100;
-    window.addEventListener("mousemove", (e) => { mx = e.clientX; my = e.clientY; }, { passive: true });
+    let seen = false;
+    let overText = false; // pointer is over an input/textarea (native I-beam zone)
+    const setHidden = (hidden) => {
+      dot.classList.toggle("is-hidden", hidden);
+      ring.classList.toggle("is-hidden", hidden);
+    };
+    setHidden(true); // stay invisible until the first real mouse position
+
+    window.addEventListener("mousemove", (e) => {
+      mx = e.clientX; my = e.clientY;
+      if (!seen) { seen = true; rx = mx; ry = my; if (!overText) setHidden(false); }
+    }, { passive: true });
+
     (function cursorLoop() {
       rx += (mx - rx) * 0.16;
       ry += (my - ry) * 0.16;
@@ -126,10 +141,25 @@
       ring.style.transform = `translate(${rx}px, ${ry}px) translate(-50%, -50%)`;
       requestAnimationFrame(cursorLoop);
     })();
+
     document.querySelectorAll("a, button, .service-card, .work-item__visual").forEach((el) => {
       el.addEventListener("mouseenter", () => { dot.classList.add("is-hover"); ring.classList.add("is-hover"); });
       el.addEventListener("mouseleave", () => { dot.classList.remove("is-hover"); ring.classList.remove("is-hover"); });
     });
+
+    // Text fields keep the native I-beam — fade the custom cursor there
+    document.querySelectorAll("input, textarea").forEach((el) => {
+      el.addEventListener("mouseenter", () => { overText = true; setHidden(true); });
+      el.addEventListener("mouseleave", () => { overText = false; setHidden(false); });
+    });
+
+    // Fade out when the pointer leaves the window
+    document.addEventListener("mouseleave", () => setHidden(true));
+    document.addEventListener("mouseenter", () => { if (seen && !overText) setHidden(false); });
+
+    // Press feedback
+    window.addEventListener("mousedown", () => ring.classList.add("is-pressed"));
+    window.addEventListener("mouseup", () => ring.classList.remove("is-pressed"));
   }
 
   /* ----------------------------------------------------------
