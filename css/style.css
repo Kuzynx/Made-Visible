@@ -806,64 +806,153 @@ html.has-cursor input, html.has-cursor textarea { cursor: text !important; }
 
 /* ------------------------------------------------------------
    Brand wall — blurred MADE VISIBLE pattern, crimson splash,
-   client brand names ringed around it
+   client brand names composed on a structured orbit grid
    ------------------------------------------------------------ */
 
 .brand-wall-section { position: relative; overflow: hidden; }
 
-.brand-wall-wrap {
-  position: relative;
-  max-width: 76rem;
+.brand-orbit {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  grid-template-areas:
+    ". top ."
+    "left wall right"
+    ". bottom .";
+  gap: 2.5rem 3rem;
+  align-items: center;
+  max-width: 72rem;
   margin-inline: auto;
 }
 
+.brand-orbit ul {
+  font-size: 0.75rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.22em;
+  color: var(--stone);
+}
+.brand-orbit li {
+  white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.7rem;
+  transition: color 0.35s ease;
+}
+.brand-orbit li:hover { color: var(--ivory); }
+
+/* crimson tick markers, mirrored so they always face the wall */
+.brand-orbit .mark {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--crimson);
+  box-shadow: 0 0 10px 2px rgba(125, 0, 0, 0.65);
+  flex-shrink: 0;
+}
+
+.brand-orbit__row--top {
+  grid-area: top;
+  display: flex;
+  justify-content: space-between;
+  padding-inline: 6%;
+}
+.brand-orbit__row--bottom {
+  grid-area: bottom;
+  display: flex;
+  justify-content: center;
+  gap: clamp(3rem, 8vw, 7rem);
+}
+.brand-orbit__col {
+  display: flex;
+  flex-direction: column;
+  gap: 3rem;
+}
+.brand-orbit__col--left { grid-area: left; align-items: flex-end; }
+.brand-orbit__col--right { grid-area: right; align-items: flex-start; }
+
+/* The wall itself */
 .brand-wall {
+  grid-area: wall;
   position: relative;
   aspect-ratio: 16 / 9;
-  border-radius: 6px;
+  border-radius: 8px;
   overflow: hidden;
-  background: #0C0B09;
+  background:
+    radial-gradient(ellipse 90% 80% at 50% 30%, #14100b 0%, #0C0B09 55%, #080807 100%);
   border: 1px solid var(--line);
+  box-shadow:
+    inset 0 1px 0 rgba(198, 174, 130, 0.08),
+    0 30px 80px -30px rgba(0, 0, 0, 0.8);
 }
+/* fine scanline texture, matching the work visuals */
+.brand-wall::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: repeating-linear-gradient(0deg, rgba(242, 239, 231, 0.015) 0 1px, transparent 1px 3px);
+  pointer-events: none;
+}
+
+/* Real brand photo (assets/brand-wall.jpg): activates automatically when
+   the file exists; until then the CSS recreation below renders instead */
+.brand-wall__photo {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: none;
+}
+.brand-wall.has-photo .brand-wall__photo { display: block; }
+.brand-wall.has-photo .brand-wall__pattern,
+.brand-wall.has-photo .brand-wall__center { display: none; }
 
 .brand-wall__pattern {
   position: absolute;
-  inset: -6%;
+  inset: -8% -12%;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   pointer-events: none;
-  -webkit-mask-image: radial-gradient(ellipse 78% 72% at 50% 50%, black 25%, transparent 80%);
-  mask-image: radial-gradient(ellipse 78% 72% at 50% 50%, black 25%, transparent 80%);
+  -webkit-mask-image: radial-gradient(ellipse 80% 75% at 50% 50%, black 25%, transparent 82%);
+  mask-image: radial-gradient(ellipse 80% 75% at 50% 50%, black 25%, transparent 82%);
 }
 .brand-wall__row {
   display: flex;
-  gap: 3.5rem;
+  gap: 3rem;
   white-space: nowrap;
   font-weight: 600;
   text-transform: uppercase;
-  letter-spacing: 0.32em;
-  font-size: clamp(0.7rem, 1.5vw, 1.05rem);
-  color: rgba(198, 174, 130, 0.34);
-  will-change: filter;
+  letter-spacing: 0.3em;
+  font-size: clamp(0.65rem, 1.35vw, 0.95rem);
+  color: rgba(198, 174, 130, 0.32);
+  will-change: transform;
 }
-.brand-wall__row:nth-child(even) { color: rgba(170, 166, 157, 0.26); }
+.brand-wall__row:nth-child(even) { color: rgba(170, 166, 157, 0.24); }
+@keyframes wall-drift { to { transform: translateX(var(--drift, -2.5rem)); } }
 
 .brand-wall__splash {
   position: absolute;
   left: 50%;
-  top: 50%;
-  width: 90%;
-  aspect-ratio: 2 / 1;
+  top: 52%;
+  width: 85%;
+  aspect-ratio: 2.2 / 1;
   transform: translate(-50%, -50%);
   background: radial-gradient(ellipse at center,
-    rgba(125, 0, 0, 0.65),
-    rgba(125, 0, 0, 0.28) 45%,
-    transparent 72%);
-  filter: blur(28px);
+    rgba(125, 0, 0, 0.62),
+    rgba(125, 0, 0, 0.26) 45%,
+    transparent 70%);
+  filter: blur(26px);
   mix-blend-mode: screen;
   pointer-events: none;
+  transition: opacity 0.8s ease;
+  animation: splash-breathe 9s ease-in-out infinite alternate;
 }
+@keyframes splash-breathe {
+  from { opacity: 0.75; transform: translate(-50%, -50%) scale(0.96); }
+  to   { opacity: 1;    transform: translate(-50%, -50%) scale(1.05); }
+}
+.brand-wall:hover .brand-wall__splash { opacity: 1; }
 
 .brand-wall__center {
   position: absolute;
@@ -872,7 +961,7 @@ html.has-cursor input, html.has-cursor textarea { cursor: text !important; }
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 1.2rem;
+  gap: 1.3rem;
   text-align: center;
   padding-inline: 1rem;
 }
@@ -881,65 +970,60 @@ html.has-cursor input, html.has-cursor textarea { cursor: text !important; }
   text-transform: uppercase;
   letter-spacing: 0.45em;
   text-indent: 0.45em; /* balances the trailing letter-space */
-  font-size: clamp(1.3rem, 4.2vw, 3.2rem);
+  font-size: clamp(1.2rem, 3.6vw, 2.7rem);
   color: var(--ivory);
   text-shadow: 0 0 60px rgba(125, 0, 0, 0.55);
 }
 .brand-wall__tag {
-  font-size: clamp(0.6rem, 1.1vw, 0.8rem);
+  display: flex;
+  align-items: center;
+  gap: 1.1rem;
+  font-size: clamp(0.58rem, 1vw, 0.75rem);
   font-weight: 500;
   text-transform: uppercase;
-  letter-spacing: 0.42em;
-  text-indent: 0.42em;
+  letter-spacing: 0.4em;
+  text-indent: 0.4em;
   color: var(--champagne);
 }
-
-.brand-ring {
-  font-size: 0.78rem;
-  font-weight: 500;
-  text-transform: uppercase;
-  letter-spacing: 0.22em;
-  color: var(--stone);
-}
-.brand-ring li {
-  white-space: nowrap;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.6rem;
-  transition: color 0.35s ease;
-}
-.brand-ring li::before {
+.brand-wall__tag::before,
+.brand-wall__tag::after {
   content: "";
-  width: 5px;
-  height: 5px;
-  border-radius: 50%;
-  background: var(--crimson);
-  box-shadow: 0 0 8px 1px rgba(125, 0, 0, 0.9);
-  flex-shrink: 0;
+  width: clamp(1.5rem, 4vw, 3rem);
+  height: 1px;
+  background: linear-gradient(to right, transparent, rgba(198, 174, 130, 0.5));
 }
-.brand-ring li:hover { color: var(--ivory); }
+.brand-wall__tag::after {
+  background: linear-gradient(to left, transparent, rgba(198, 174, 130, 0.5));
+}
 
-@media (min-width: 901px) {
-  .brand-wall-wrap { padding: 4.5rem 11rem 4rem; }
-  .brand-ring li { position: absolute; }
-  .brand-ring li:nth-child(1) { top: 2rem; left: 16%; }
-  .brand-ring li:nth-child(2) { top: 0.5rem; left: 50%; transform: translateX(-50%); }
-  .brand-ring li:nth-child(3) { top: 2rem; right: 16%; }
-  .brand-ring li:nth-child(4) { top: 34%; left: 0; }
-  .brand-ring li:nth-child(5) { top: 34%; right: 0; }
-  .brand-ring li:nth-child(6) { top: 58%; left: 0.5rem; }
-  .brand-ring li:nth-child(7) { top: 58%; right: 0.5rem; }
-  .brand-ring li:nth-child(8) { bottom: 0.5rem; left: 22%; }
-  .brand-ring li:nth-child(9) { bottom: 0.5rem; right: 22%; }
-}
 @media (max-width: 900px) {
-  .brand-ring {
+  .brand-orbit {
     display: flex;
+    flex-direction: column;
+    gap: 2.25rem;
+  }
+  .brand-wall { order: -1; align-self: stretch; }
+  .brand-orbit ul {
+    display: flex;
+    flex-direction: row;
     flex-wrap: wrap;
     justify-content: center;
-    gap: 1rem 1.75rem;
-    margin-top: 2.25rem;
+    gap: 0.9rem 1.75rem;
+    padding: 0;
   }
+  .brand-orbit__row--top { order: 1; }
+  .brand-orbit__col--left { order: 2; }
+  .brand-orbit__col--right { order: 3; }
+  .brand-orbit__row--bottom { order: 4; }
+  .brand-orbit { row-gap: 0.9rem; }
+  .brand-wall { margin-bottom: 1.5rem; }
+  /* dots lead the text in the stacked list, matching the other rows */
+  .brand-orbit__col--left li { flex-direction: row-reverse; }
+}
+
+@media (max-width: 560px) {
+  .brand-wall__tag { letter-spacing: 0.3em; text-indent: 0.3em; white-space: nowrap; }
+  .brand-wall__tag::before, .brand-wall__tag::after { display: none; }
 }
 
 /* ------------------------------------------------------------
