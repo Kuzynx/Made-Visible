@@ -412,15 +412,35 @@
      ---------------------------------------------------------- */
   const wallPattern = document.querySelector(".brand-wall__pattern");
   if (wallPattern) {
-    const ROWS = 10;
+    const ROWS = 11;
     for (let i = 0; i < ROWS; i++) {
       const row = document.createElement("div");
       row.className = "brand-wall__row";
-      row.textContent = Array(14).fill("MADE VISIBLE").join("  ");
+      row.textContent = Array(16).fill("MADE VISIBLE").join("\u2002\u2002");
       row.style.marginLeft = `-${(i % 4) * 4 + 1}rem`;
       row.style.filter = `blur(${1.5 + ((i * 7) % 5) * 0.8}px)`;
       row.style.opacity = String(0.45 + ((i * 3) % 5) * 0.11);
+      if (!prefersReducedMotion) {
+        // slow horizontal drift, alternating direction per row
+        row.style.setProperty("--drift", `${i % 2 ? 2.5 : -2.5}rem`);
+        row.style.animation = `wall-drift ${22 + (i % 5) * 4}s ease-in-out ${-(i * 3)}s infinite alternate`;
+      }
       wallPattern.appendChild(row);
+    }
+  }
+
+  // Swap in the real brand photo when assets/brand-wall.jpg exists
+  const wallPhoto = document.querySelector(".brand-wall__photo");
+  if (wallPhoto) {
+    const activatePhoto = () => {
+      const wall = wallPhoto.closest(".brand-wall");
+      if (wall) wall.classList.add("has-photo");
+    };
+    if (wallPhoto.complete) {
+      wallPhoto.naturalWidth > 0 ? activatePhoto() : wallPhoto.remove();
+    } else {
+      wallPhoto.addEventListener("load", activatePhoto);
+      wallPhoto.addEventListener("error", () => wallPhoto.remove());
     }
   }
 
