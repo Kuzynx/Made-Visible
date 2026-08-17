@@ -287,7 +287,7 @@
   const heroCanvasWrap = document.querySelector(".hero__canvas");
   if (heroCanvasWrap && window.THREE && !prefersReducedMotion) {
     const scene = new THREE.Scene();
-    scene.fog = new THREE.FogExp2(0x0a0a0a, 0.055);
+    scene.fog = new THREE.FogExp2(0x0a0a0a, 0.05);
 
     const camera = new THREE.PerspectiveCamera(50, 1, 0.1, 100);
     camera.position.set(0, 0, 11);
@@ -299,27 +299,65 @@
     const champagne = new THREE.Color(0xc6ae82);
     const stone = new THREE.Color(0xaaa69d);
 
-    // Core wireframe form
-    const coreGroup = new THREE.Group();
-    const ico = new THREE.Mesh(
-      new THREE.IcosahedronGeometry(3.1, 1),
-      new THREE.MeshBasicMaterial({ color: champagne, wireframe: true, transparent: true, opacity: 0.28 })
-    );
-    const icoInner = new THREE.Mesh(
-      new THREE.IcosahedronGeometry(2.1, 0),
-      new THREE.MeshBasicMaterial({ color: champagne, wireframe: true, transparent: true, opacity: 0.14 })
-    );
-    coreGroup.add(ico, icoInner);
-    scene.add(coreGroup);
+    /* --------------------------------------------------------
+       Procedural camera model — dark solids that occlude, with
+       champagne edge wireframes on top (technical-drawing look)
+       -------------------------------------------------------- */
+    const camGroup = new THREE.Group();
+    const lineMat = new THREE.LineBasicMaterial({ color: champagne, transparent: true, opacity: 0.75 });
+    const softLineMat = new THREE.LineBasicMaterial({ color: champagne, transparent: true, opacity: 0.35 });
+    const occluderMat = new THREE.MeshBasicMaterial({ color: 0x0c0b09, transparent: true, opacity: 0.88 });
 
-    // Glowing vertices on the core
-    const icoPoints = new THREE.Points(
-      new THREE.IcosahedronGeometry(3.1, 1),
-      new THREE.PointsMaterial({ color: champagne, size: 0.055, transparent: true, opacity: 0.9, sizeAttenuation: true })
-    );
-    coreGroup.add(icoPoints);
+    const part = (geo, x, y, z, opts = {}) => {
+      const solid = new THREE.Mesh(geo, occluderMat);
+      const edges = new THREE.LineSegments(
+        new THREE.EdgesGeometry(geo, opts.threshold ?? 12),
+        opts.soft ? softLineMat : lineMat
+      );
+      edges.scale.setScalar(1.002);
+      solid.add(edges);
+      solid.position.set(x, y, z);
+      if (opts.rx) solid.rotation.x = opts.rx;
+      if (opts.ry) solid.rotation.y = opts.ry;
+      if (opts.rz) solid.rotation.z = opts.rz;
+      camGroup.add(solid);
+      return solid;
+    };
+    const ring = (radius, tube, x, y, z, segments = 28) => {
+      const t = new THREE.Mesh(
+        new THREE.TorusGeometry(radius, tube, 8, segments),
+        occluderMat
+      );
+      t.add(new THREE.LineSegments(new THREE.EdgesGeometry(t.geometry, 30), softLineMat));
+      t.position.set(x, y, z);
+      camGroup.add(t);
+      return t;
+    };
 
-    // Ambient particle field
+    // Body + grip
+    part(new THREE.BoxGeometry(3.4, 2.1, 1.3), 0, 0, 0);
+    part(new THREE.BoxGeometry(0.55, 1.95, 1.5), 1.5, -0.02, 0.06);
+    // Pentaprism hump + hot shoe
+    part(new THREE.BoxGeometry(1.5, 0.62, 1.05), 0, 1.33, 0);
+    part(new THREE.BoxGeometry(0.55, 0.1, 0.55), 0, 1.7, 0);
+    // Lens barrel, focus ring, hood ring, glass rings
+    part(new THREE.CylinderGeometry(0.8, 0.8, 1.5, 16), 0, 0, 1.28, { rx: Math.PI / 2, threshold: 10 });
+    ring(0.86, 0.075, 0, 0, 1.02);
+    ring(0.82, 0.05, 0, 0, 1.98);
+    ring(0.55, 0.022, 0, 0, 2.02, 24);
+    ring(0.28, 0.016, 0, 0, 2.04, 20);
+    // Mode dial + shutter button
+    part(new THREE.CylinderGeometry(0.28, 0.28, 0.2, 12), -1.22, 1.16, 0.1, { threshold: 10 });
+    part(new THREE.CylinderGeometry(0.13, 0.13, 0.12, 10), 1.12, 1.14, 0.28, { threshold: 10 });
+    // Viewfinder (back) + strap lugs
+    part(new THREE.BoxGeometry(0.52, 0.36, 0.08), 0, 0.55, -0.69);
+    ring(0.1, 0.03, -1.73, 0.72, 0, 12).rotation.y = Math.PI / 2;
+    ring(0.1, 0.03, 1.79, 0.72, 0, 12).rotation.y = Math.PI / 2;
+
+    camGroup.scale.setScalar(1.08);
+    scene.add(camGroup);
+
+    // Ambient particle field (unchanged language from the previous hero)
     const COUNT = 900;
     const positions = new Float32Array(COUNT * 3);
     const colors = new Float32Array(COUNT * 3);
@@ -348,21 +386,51 @@
       camera.aspect = w / h;
       camera.updateProjectionMatrix();
       renderer.setSize(w, h);
-      // Push the form to the right on wide screens, centre it on mobile
-      coreGroup.position.x = w > 900 ? 3.4 : 0;
-      coreGroup.position.y = w > 900 ? 0.2 : 1.6;
+      camGroup.position.x = w > 900 ? 3.4 : 0;
+      camGroup.position.y = w > 900 ? 0.2 : 1.7;
+      camGroup.scale.setScalar(w > 900 ? 1.08 : 0.8);
     }
     resize();
     window.addEventListener("resize", resize);
 
-    // Mouse parallax
+    /* --------------------------------------------------------
+       Drag to spin — pointer drag with momentum; slow auto-spin
+       resumes a moment after the user lets go
+       -------------------------------------------------------- */
+    let rotY = -0.55, rotX = 0.12;
+    let vX = 0, vY = 0;
+    let dragging = false, lastX = 0, lastY = 0, lastDrag = 0;
+    const hint = document.querySelector(".hero__drag-hint");
+
+    heroCanvasWrap.style.touchAction = "pan-y"; // horizontal drag spins, vertical still scrolls
+    heroCanvasWrap.addEventListener("pointerdown", (e) => {
+      dragging = true;
+      lastX = e.clientX; lastY = e.clientY;
+      vX = 0; vY = 0;
+      heroCanvasWrap.setPointerCapture(e.pointerId);
+      if (e.pointerType === "mouse") e.preventDefault();
+      if (hint) hint.classList.add("is-done");
+    });
+    window.addEventListener("pointermove", (e) => {
+      if (!dragging) return;
+      const dx = e.clientX - lastX;
+      const dy = e.clientY - lastY;
+      lastX = e.clientX; lastY = e.clientY;
+      rotY += dx * 0.007;
+      rotX = Math.max(-0.9, Math.min(0.9, rotX + dy * 0.004));
+      vX = dx * 0.007; vY = dy * 0.004;
+      lastDrag = performance.now();
+    }, { passive: true });
+    const endDrag = () => { dragging = false; lastDrag = performance.now(); };
+    window.addEventListener("pointerup", endDrag);
+    window.addEventListener("pointercancel", endDrag);
+
+    // Mouse parallax (subtle) + scroll drift
     let tx = 0, ty = 0, cx = 0, cy = 0;
     window.addEventListener("mousemove", (e) => {
       tx = (e.clientX / window.innerWidth - 0.5) * 2;
       ty = (e.clientY / window.innerHeight - 0.5) * 2;
     }, { passive: true });
-
-    // Scroll influence
     let scrollFactor = 0;
     window.addEventListener("scroll", () => {
       scrollFactor = Math.min(window.scrollY / window.innerHeight, 1.5);
@@ -370,8 +438,6 @@
 
     const clock = new THREE.Clock();
     let running = true;
-
-    // Pause rendering when the hero is off screen
     if ("IntersectionObserver" in window) {
       new IntersectionObserver((entries) => { running = entries[0].isIntersecting; }, { threshold: 0 })
         .observe(heroCanvasWrap);
@@ -382,24 +448,28 @@
       if (!running) return;
       const t = clock.getElapsedTime();
 
-      coreGroup.rotation.y = t * 0.12 + cx * 0.35;
-      coreGroup.rotation.x = Math.sin(t * 0.18) * 0.15 + cy * 0.25;
-      icoInner.rotation.y = -t * 0.2;
-      icoInner.rotation.z = t * 0.1;
+      if (!dragging) {
+        // Momentum, then settle into a slow idle spin
+        rotY += vX;
+        rotX = Math.max(-0.9, Math.min(0.9, rotX + vY));
+        vX *= 0.94; vY *= 0.94;
+        if (performance.now() - lastDrag > 2200) {
+          rotY += 0.0028;
+          rotX += (0.12 - rotX) * 0.02;
+        }
+      }
 
-      // Gentle breathing
-      const s = 1 + Math.sin(t * 0.6) * 0.03;
-      ico.scale.setScalar(s);
-      icoPoints.scale.setScalar(s);
+      camGroup.rotation.y = rotY;
+      camGroup.rotation.x = rotX;
+      camGroup.position.y += Math.sin(t * 0.8) * 0.0012; // gentle float
 
       stars.rotation.y = t * 0.015;
 
-      // Ease mouse
       cx += (tx - cx) * 0.04;
       cy += (ty - cy) * 0.04;
-      camera.position.x = cx * 0.6;
-      camera.position.y = -cy * 0.4 - scrollFactor * 2.2;
-      camera.lookAt(coreGroup.position.x * 0.5, 0, 0);
+      camera.position.x = cx * 0.35;
+      camera.position.y = -cy * 0.25 - scrollFactor * 2.2;
+      camera.lookAt(camGroup.position.x * 0.5, 0, 0);
 
       renderer.render(scene, camera);
     })();
