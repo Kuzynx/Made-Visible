@@ -17,20 +17,37 @@
   const preloader = document.querySelector(".preloader");
   let seenIntro = false;
   try { seenIntro = !!sessionStorage.getItem("mv-intro"); } catch (e) { /* storage unavailable */ }
+
+  // Single choreographer for the entry sequence: dismisses the preloader,
+  // fires the camera flash (first visit only), starts the hero light sweep,
+  // and signals everything else via the mv:reveal event.
+  const reveal = (withFlash) => {
+    if (window.__mvRevealed) return;
+    window.__mvRevealed = true;
+    preloader && preloader.classList.add("is-done");
+    if (withFlash && !prefersReducedMotion) {
+      const flash = document.querySelector(".flash");
+      if (flash) flash.classList.add("is-firing");
+    }
+    const sweep = document.querySelector(".hero__sweep");
+    if (sweep && !prefersReducedMotion) setTimeout(() => sweep.classList.add("is-on"), 250);
+    document.dispatchEvent(new CustomEvent("mv:reveal"));
+  };
+
   if (preloader && seenIntro) {
     // Returning within the session: skip the intro instead of replaying it on every page
     preloader.style.transitionDuration = "0.3s";
-    preloader.classList.add("is-done");
+    reveal(false);
   } else {
     window.addEventListener("load", () => {
       setTimeout(() => {
-        preloader && preloader.classList.add("is-done");
+        reveal(true);
         try { sessionStorage.setItem("mv-intro", "1"); } catch (e) { /* ignore */ }
       }, 650);
     });
   }
   // Safety: never trap the user behind the preloader
-  setTimeout(() => preloader && preloader.classList.add("is-done"), 3000);
+  setTimeout(() => reveal(false), 3000);
 
   /* ----------------------------------------------------------
      Smooth scrolling — Lenis
@@ -263,13 +280,21 @@
       });
     });
 
-    // Hero intro (plays on load, not scroll)
+    // Hero intro — starts when the preloader hands off (mv:reveal)
     const heroLines = document.querySelectorAll(".hero__title .line > span");
     if (heroLines.length) {
-      gsap.to(heroLines, { y: 0, duration: 1.3, ease: "power4.out", stagger: 0.14, delay: 0.9 });
-      gsap.to(".hero [data-hero-fade]", {
-        opacity: 1, y: 0, duration: 1.1, ease: "power3.out", stagger: 0.15, delay: 1.5,
-      });
+      const startHeroIntro = () => {
+        gsap.to(heroLines, { y: 0, duration: 1.3, ease: "power4.out", stagger: 0.16, delay: 0.1 });
+        // "visible." pulls into focus like a lens
+        gsap.fromTo(".hero__title .serif",
+          { filter: "blur(16px)", opacity: 0 },
+          { filter: "blur(0px)", opacity: 1, duration: 1.6, ease: "power2.out", delay: 0.6 });
+        gsap.to(".hero [data-hero-fade]", {
+          opacity: 1, y: 0, duration: 1.1, ease: "power3.out", stagger: 0.15, delay: 0.85,
+        });
+      };
+      if (window.__mvRevealed) startHeroIntro();
+      else document.addEventListener("mv:reveal", startHeroIntro, { once: true });
     }
   } else {
     // No GSAP or reduced motion: show everything
@@ -419,6 +444,7 @@
     scene.add(stars);
 
     // Sizing
+    let baseScale = 1.08;
     function resize() {
       const { clientWidth: w, clientHeight: h } = heroCanvasWrap;
       camera.aspect = w / h;
@@ -426,10 +452,18 @@
       renderer.setSize(w, h);
       camGroup.position.x = w > 900 ? 3.9 : 0;
       camGroup.position.y = w > 900 ? 0.2 : 1.7;
-      camGroup.scale.setScalar(w > 900 ? 1.08 : 0.8);
+      baseScale = w > 900 ? 1.08 : 0.8;
     }
     resize();
     window.addEventListener("resize", resize);
+
+    // Entrance: the camera sweeps in from the distance on reveal,
+    // spinning into its resting orientation
+    let introT = 0;
+    let introActive = false;
+    const beginCameraIntro = () => { introActive = true; };
+    if (window.__mvRevealed) beginCameraIntro();
+    else document.addEventListener("mv:reveal", beginCameraIntro, { once: true });
 
     /* --------------------------------------------------------
        Drag to spin — pointer drag with momentum; slow auto-spin
@@ -505,8 +539,13 @@
         if (placeholderFade === 0) { camGroup.remove(placeholder); placeholderFade = -1; }
       }
 
-      camGroup.rotation.y = rotY;
+      if (introActive && introT < 1) introT = Math.min(1, introT + 0.011);
+      const introE = 1 - Math.pow(1 - introT, 3); // ease-out cubic
+
+      camGroup.rotation.y = rotY - (1 - introE) * 2.6;
       camGroup.rotation.x = rotX;
+      camGroup.position.z = -(1 - introE) * 5;
+      camGroup.scale.setScalar(baseScale * (0.55 + 0.45 * introE));
       camGroup.position.y += Math.sin(t * 0.8) * 0.0012; // gentle float
 
       stars.rotation.y = t * 0.015;
