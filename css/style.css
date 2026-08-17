@@ -1029,6 +1029,91 @@ html.has-cursor input, html.has-cursor textarea { cursor: text !important; }
 }
 
 /* ------------------------------------------------------------
+   Real client imagery — case media, receipts, logo strip, video
+   ------------------------------------------------------------ */
+
+.case-media {
+  border-radius: 6px;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  background: var(--charcoal);
+}
+.case-media img { width: 100%; display: block; }
+
+/* Work-item visuals that hold a real image */
+.work-item__visual--square { aspect-ratio: 1 / 1; }
+.work-item__visual .cover {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.work-item__visual--logo {
+  background: var(--ivory);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(2rem, 5vw, 3.5rem);
+}
+.work-item__visual--logo img {
+  max-width: 80%;
+  max-height: 70%;
+  object-fit: contain;
+}
+
+/* Receipts — real screenshots as proof */
+.receipts-stack { display: flex; flex-direction: column; gap: 1rem; }
+.receipt-card {
+  background: #000;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 0.9rem;
+  margin: 0;
+}
+.receipt-card img { width: 100%; display: block; border-radius: 6px; }
+.receipt-card figcaption {
+  padding-top: 0.7rem;
+  font-size: 0.62rem;
+  font-weight: 500;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--stone);
+  text-align: center;
+}
+
+/* Video showcase */
+.video-card {
+  border-radius: 6px;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  background: #000;
+  position: relative;
+}
+.video-card video { width: 100%; display: block; }
+
+/* Client logo strip */
+.logo-strip {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 13rem), 1fr));
+  gap: 1.25rem;
+}
+.logo-chip {
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--charcoal);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  aspect-ratio: 16 / 9;
+  padding: 1.5rem;
+  transition: border-color 0.4s ease, transform 0.4s var(--ease-out);
+}
+.logo-chip:hover { border-color: rgba(198, 174, 130, 0.5); transform: translateY(-3px); }
+.logo-chip img { max-width: 78%; max-height: 82%; object-fit: contain; }
+.logo-chip--light { background: var(--ivory); }
+
+/* ------------------------------------------------------------
    Growth results — social case study cards (1-year TikTok growth)
    ------------------------------------------------------------ */
 
