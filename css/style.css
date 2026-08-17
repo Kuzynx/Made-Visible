@@ -191,36 +191,55 @@ h1, h2, h3, h4 {
 html.has-cursor, html.has-cursor * { cursor: none !important; }
 html.has-cursor input, html.has-cursor textarea { cursor: text !important; }
 
-.cursor {
+/* Crosshair cursor — thin champagne cross, rotates to an X over
+   interactive elements, followed by a fading comet trail */
+.cursor-cross {
   position: fixed;
   top: 0; left: 0;
-  width: 8px; height: 8px;
+  width: 22px;
+  height: 22px;
+  pointer-events: none;
+  z-index: 300;
+  transition: opacity 0.3s ease;
+}
+.cursor-cross__inner {
+  position: absolute;
+  inset: 0;
+  display: block;
+  transition: transform 0.35s var(--ease-out);
+}
+.cursor-cross__inner i {
+  position: absolute;
+  background: var(--champagne);
+  box-shadow: 0 0 0 0.5px rgba(10, 10, 10, 0.4); /* readable on ivory */
+}
+.cursor-cross__inner i:nth-child(1) {
+  left: 50%; top: 0;
+  width: 1.5px; height: 100%;
+  transform: translateX(-50%);
+}
+.cursor-cross__inner i:nth-child(2) {
+  top: 50%; left: 0;
+  height: 1.5px; width: 100%;
+  transform: translateY(-50%);
+}
+.cursor-cross.is-hover .cursor-cross__inner { transform: rotate(45deg) scale(1.4); }
+.cursor-cross.is-pressed .cursor-cross__inner { transform: scale(0.75); }
+.cursor-cross.is-hover.is-pressed .cursor-cross__inner { transform: rotate(45deg) scale(1.1); }
+.cursor-cross.is-hidden { opacity: 0; }
+
+.cursor-trail {
+  position: fixed;
+  top: 0; left: 0;
   border-radius: 50%;
   background: var(--champagne);
-  /* thin dark halo keeps the dot visible on ivory surfaces
-     (blend-mode inversion made it turn navy there) */
-  box-shadow: 0 0 0 1px rgba(10, 10, 10, 0.35);
   pointer-events: none;
-  z-index: 300; /* above the preloader so the cursor never disappears */
-  transform: translate(-50%, -50%);
-  transition: width 0.3s var(--ease-out), height 0.3s var(--ease-out), opacity 0.3s;
+  z-index: 299;
+  transition: opacity 0.3s ease;
 }
-.cursor--ring {
-  width: 36px; height: 36px;
-  background: transparent;
-  border: 1px solid rgba(198, 174, 130, 0.5);
-  box-shadow: none;
-  /* no transform transition: position is driven per-frame by JS,
-     and a transition on top of it causes stutter */
-  transition: width 0.3s var(--ease-out), height 0.3s var(--ease-out),
-    opacity 0.3s, border-color 0.3s;
-}
-.cursor.is-hover { width: 14px; height: 14px; }
-.cursor--ring.is-hover { width: 56px; height: 56px; }
-.cursor--ring.is-pressed { width: 26px; height: 26px; border-color: var(--champagne); }
-.cursor--ring.is-hover.is-pressed { width: 44px; height: 44px; }
-.cursor.is-hidden { opacity: 0; }
-@media (hover: none), (pointer: coarse) { .cursor, .cursor--ring { display: none; } }
+.cursor-trail.is-hidden { opacity: 0 !important; }
+
+@media (hover: none), (pointer: coarse) { .cursor-cross, .cursor-trail { display: none; } }
 
 /* ------------------------------------------------------------
    Header / Navigation
