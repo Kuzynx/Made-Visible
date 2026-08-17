@@ -114,15 +114,27 @@
   /* ----------------------------------------------------------
      Custom cursor
      ---------------------------------------------------------- */
-  const dot = document.querySelector(".cursor--dot");
-  const ring = document.querySelector(".cursor--ring");
-  if (dot && ring && window.matchMedia("(hover: hover) and (pointer: fine)").matches) {
-    let mx = -100, my = -100, rx = -100, ry = -100;
+  const cross = document.querySelector(".cursor-cross");
+  if (cross && window.matchMedia("(hover: hover) and (pointer: fine)").matches) {
+    // Comet trail: chained dots, each easing toward the one before it
+    const TRAIL = prefersReducedMotion ? 0 : 8;
+    const trail = [];
+    for (let i = 0; i < TRAIL; i++) {
+      const t = document.createElement("div");
+      t.className = "cursor-trail";
+      const size = 5 - i * 0.45;
+      t.style.width = t.style.height = `${size}px`;
+      t.style.opacity = String(0.38 - i * 0.042);
+      document.body.appendChild(t);
+      trail.push({ el: t, x: -100, y: -100 });
+    }
+
+    let mx = -100, my = -100;
     let seen = false;
     let overText = false; // pointer is over an input/textarea (native I-beam zone)
     const setHidden = (hidden) => {
-      dot.classList.toggle("is-hidden", hidden);
-      ring.classList.toggle("is-hidden", hidden);
+      cross.classList.toggle("is-hidden", hidden);
+      trail.forEach((t) => t.el.classList.toggle("is-hidden", hidden));
     };
     setHidden(true); // stay invisible until the first real mouse position
 
@@ -130,7 +142,7 @@
       mx = e.clientX; my = e.clientY;
       if (!seen) {
         seen = true;
-        rx = mx; ry = my;
+        trail.forEach((t) => { t.x = mx; t.y = my; });
         // Only hide the native cursor once the custom one has a real
         // position — a stationary pointer keeps the OS arrow until then
         document.documentElement.classList.add("has-cursor");
@@ -139,16 +151,22 @@
     }, { passive: true });
 
     (function cursorLoop() {
-      rx += (mx - rx) * 0.22;
-      ry += (my - ry) * 0.22;
-      dot.style.transform = `translate(${mx}px, ${my}px) translate(-50%, -50%)`;
-      ring.style.transform = `translate(${rx}px, ${ry}px) translate(-50%, -50%)`;
+      // Cross follows instantly
+      cross.style.transform = `translate(${mx - 11}px, ${my - 11}px)`;
+      // Each trail dot chases the previous point in the chain
+      let px = mx, py = my;
+      for (const t of trail) {
+        t.x += (px - t.x) * 0.35;
+        t.y += (py - t.y) * 0.35;
+        t.el.style.transform = `translate(${t.x}px, ${t.y}px) translate(-50%, -50%)`;
+        px = t.x; py = t.y;
+      }
       requestAnimationFrame(cursorLoop);
     })();
 
-    document.querySelectorAll("a, button, .service-card, .work-item__visual").forEach((el) => {
-      el.addEventListener("mouseenter", () => { dot.classList.add("is-hover"); ring.classList.add("is-hover"); });
-      el.addEventListener("mouseleave", () => { dot.classList.remove("is-hover"); ring.classList.remove("is-hover"); });
+    document.querySelectorAll("a, button, .service-card, .work-item__visual, .case-media").forEach((el) => {
+      el.addEventListener("mouseenter", () => cross.classList.add("is-hover"));
+      el.addEventListener("mouseleave", () => cross.classList.remove("is-hover"));
     });
 
     // Text fields keep the native I-beam — fade the custom cursor there
@@ -162,8 +180,8 @@
     document.addEventListener("mouseenter", () => { if (seen && !overText) setHidden(false); });
 
     // Press feedback
-    window.addEventListener("mousedown", () => ring.classList.add("is-pressed"));
-    window.addEventListener("mouseup", () => ring.classList.remove("is-pressed"));
+    window.addEventListener("mousedown", () => cross.classList.add("is-pressed"));
+    window.addEventListener("mouseup", () => cross.classList.remove("is-pressed"));
   }
 
   /* ----------------------------------------------------------
