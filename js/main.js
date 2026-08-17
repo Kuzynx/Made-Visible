@@ -287,13 +287,16 @@
   const heroCanvasWrap = document.querySelector(".hero__canvas");
   if (heroCanvasWrap && window.THREE && !prefersReducedMotion) {
     const scene = new THREE.Scene();
-    scene.fog = new THREE.FogExp2(0x0a0a0a, 0.05);
+    scene.fog = new THREE.FogExp2(0x0a0a0a, 0.035);
 
     const camera = new THREE.PerspectiveCamera(50, 1, 0.1, 100);
     camera.position.set(0, 0, 11);
 
     const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.outputEncoding = THREE.sRGBEncoding;
+    renderer.toneMapping = THREE.ACESFilmicToneMapping;
+    renderer.toneMappingExposure = 1.15;
     heroCanvasWrap.appendChild(renderer.domElement);
 
     const champagne = new THREE.Color(0xc6ae82);
@@ -354,8 +357,43 @@
     ring(0.1, 0.03, -1.73, 0.72, 0, 12).rotation.y = Math.PI / 2;
     ring(0.1, 0.03, 1.79, 0.72, 0, 12).rotation.y = Math.PI / 2;
 
+    // The primitives above are only a stand-in while the real model loads
+    const placeholder = new THREE.Group();
+    while (camGroup.children.length) placeholder.add(camGroup.children[0]);
+    camGroup.add(placeholder);
+
     camGroup.scale.setScalar(1.08);
     scene.add(camGroup);
+
+    // Lighting for the PBR model (invisible to the Basic-material stand-in)
+    scene.add(new THREE.AmbientLight(0xffffff, 0.45));
+    const keyLight = new THREE.DirectionalLight(0xfff1dc, 1.7);
+    keyLight.position.set(5, 8, 7);
+    scene.add(keyLight);
+    const rimLight = new THREE.DirectionalLight(0xc6ae82, 1.3);
+    rimLight.position.set(-6, 4, -5);
+    scene.add(rimLight);
+
+    // Real camera model — Antique Camera by Maximillan Kamps / UX3D (CC0)
+    let placeholderFade = -1;
+    if (THREE.GLTFLoader) {
+      new THREE.GLTFLoader().load(
+        "assets/camera.glb",
+        (gltf) => {
+          const model = gltf.scene;
+          const box = new THREE.Box3().setFromObject(model);
+          const size = box.getSize(new THREE.Vector3());
+          const center = box.getCenter(new THREE.Vector3());
+          const s = 4.8 / size.y;
+          model.scale.setScalar(s);
+          model.position.sub(center.multiplyScalar(s));
+          camGroup.add(model);
+          placeholderFade = 1; // hand off from the wireframe stand-in
+        },
+        undefined,
+        () => { /* keep the wireframe stand-in if the model fails to load */ }
+      );
+    }
 
     // Ambient particle field (unchanged language from the previous hero)
     const COUNT = 900;
@@ -386,7 +424,7 @@
       camera.aspect = w / h;
       camera.updateProjectionMatrix();
       renderer.setSize(w, h);
-      camGroup.position.x = w > 900 ? 3.4 : 0;
+      camGroup.position.x = w > 900 ? 3.9 : 0;
       camGroup.position.y = w > 900 ? 0.2 : 1.7;
       camGroup.scale.setScalar(w > 900 ? 1.08 : 0.8);
     }
@@ -457,6 +495,14 @@
           rotY += 0.0028;
           rotX += (0.12 - rotX) * 0.02;
         }
+      }
+
+      if (placeholderFade >= 0) {
+        placeholderFade = Math.max(0, placeholderFade - 0.025);
+        lineMat.opacity = 0.75 * placeholderFade;
+        softLineMat.opacity = 0.35 * placeholderFade;
+        occluderMat.opacity = 0.88 * placeholderFade;
+        if (placeholderFade === 0) { camGroup.remove(placeholder); placeholderFade = -1; }
       }
 
       camGroup.rotation.y = rotY;

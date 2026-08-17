@@ -37,7 +37,7 @@ python3 -m http.server 8000
 
 Libraries (loaded from CDN):
 
-- **Three.js** — 3D hero: champagne wireframe icosahedron + particle field with mouse parallax
+- **Three.js** — 3D hero: drag-to-spin antique camera model in a particle field ("Antique Camera" by Maximillan Kamps / UX3D, CC0, via the Khronos glTF Sample Assets; optimized with glTF-Transform)
 - **GSAP + ScrollTrigger** — scroll reveals, line-mask headlines, parallax, word-by-word statements, animated counters
 - **Lenis** — smooth scrolling
 
