@@ -1122,7 +1122,8 @@ html.has-cursor input, html.has-cursor textarea { cursor: text !important; }
     gap: 0.9rem 1.75rem;
     padding: 0;
   }
-  .brand-orbit__row--top { order: 1; }
+  /* names ring the wall on mobile too: top row above, the rest below */
+  .brand-orbit__row--top { order: -2; }
   .brand-orbit__col--left { order: 2; }
   .brand-orbit__col--right { order: 3; }
   .brand-orbit__row--bottom { order: 4; }
@@ -1221,6 +1222,74 @@ html.has-cursor input, html.has-cursor textarea { cursor: text !important; }
 .logo-chip:hover { border-color: rgba(198, 174, 130, 0.5); transform: translateY(-3px); }
 .logo-chip img { max-width: 78%; max-height: 82%; object-fit: contain; }
 .logo-chip--light { background: var(--ivory); }
+
+/* ------------------------------------------------------------
+   Split visuals with real imagery + FAQ accordion
+   ------------------------------------------------------------ */
+
+.split__visual--square { aspect-ratio: 1 / 1; }
+.split__visual .cover {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.split__visual--logo {
+  background: var(--charcoal);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(2.5rem, 6vw, 4.5rem);
+}
+.split__visual--logo img {
+  max-width: 78%;
+  max-height: 70%;
+  object-fit: contain;
+}
+.split__visual--video {
+  aspect-ratio: 16 / 9;
+  background: #000;
+}
+.split__visual--video video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.faq { border-top: 1px solid var(--line); }
+.faq details { border-bottom: 1px solid var(--line); }
+.faq summary {
+  cursor: pointer;
+  list-style: none;
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1.5rem;
+  padding: 1.5rem 0.25rem;
+  font-weight: 600;
+  font-size: clamp(1rem, 1.8vw, 1.2rem);
+  transition: color 0.3s ease;
+}
+.faq summary::-webkit-details-marker { display: none; }
+.faq summary::after {
+  content: "+";
+  color: var(--champagne);
+  font-weight: 400;
+  font-size: 1.4rem;
+  line-height: 1;
+  transition: transform 0.35s var(--ease-out);
+  flex-shrink: 0;
+}
+.faq details[open] summary::after { transform: rotate(45deg); }
+.faq summary:hover { color: var(--champagne); }
+.faq .faq__a {
+  color: var(--stone);
+  max-width: 62ch;
+  padding: 0 0.25rem 1.75rem;
+}
 
 /* ------------------------------------------------------------
    Growth results — social case study cards (1-year TikTok growth)
