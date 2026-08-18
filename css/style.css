@@ -166,6 +166,15 @@ h1, h2, h3, h4 {
   transition: opacity 0.8s var(--ease-out), visibility 0.8s;
 }
 .preloader.is-done { opacity: 0; visibility: hidden; pointer-events: none; }
+.preloader__img {
+  width: clamp(200px, 34vw, 340px);
+  height: auto;
+  opacity: 0;
+  transform: translateY(14px) scale(0.96);
+  animation: preloader-in 1.1s var(--ease-out) 0.1s forwards;
+}
+@keyframes preloader-in { to { opacity: 1; transform: none; } }
+
 .preloader__logo {
   font-weight: 700;
   text-transform: uppercase;
@@ -315,7 +324,11 @@ html.has-cursor input, html.has-cursor textarea { cursor: text !important; }
   text-transform: uppercase;
   letter-spacing: 0.38em;
   white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.65rem;
 }
+.logo__mark { height: 1.9rem; width: auto; display: block; }
 .logo em {
   font-style: normal;
   color: var(--champagne);
