@@ -951,6 +951,29 @@ html.has-cursor input, html.has-cursor textarea { cursor: text !important; }
 }
 .brand-orbit li:hover { color: var(--ivory); }
 
+/* real client logos in the orbit as uniform mini-chips */
+.brand-orbit .orbit-logo {
+  display: block;
+  width: 7.5rem;
+  height: 4.3rem;
+  object-fit: contain;
+  background: #000;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 0.45rem 0.7rem;
+  opacity: 0.95;
+  transition: opacity 0.3s ease, transform 0.3s var(--ease-out), border-color 0.3s ease;
+}
+.brand-orbit li:hover .orbit-logo {
+  opacity: 1;
+  transform: translateY(-2px);
+  border-color: rgba(198, 174, 130, 0.45);
+}
+.brand-orbit .orbit-logo--light { background: var(--ivory); }
+@media (max-width: 900px) {
+  .brand-orbit .orbit-logo { width: 6rem; height: 3.4rem; }
+}
+
 /* crimson tick markers, mirrored so they always face the wall */
 .brand-orbit .mark {
   width: 4px;
