@@ -943,13 +943,10 @@ html.has-cursor input, html.has-cursor textarea { cursor: text !important; }
 .brand-orbit {
   display: grid;
   grid-template-columns: auto minmax(0, 1fr) auto;
-  grid-template-areas:
-    ". top ."
-    "left wall right"
-    ". bottom .";
-  gap: 2.25rem 2.5rem;
+  grid-template-areas: "left wall right";
+  gap: 2.5rem;
   align-items: center;
-  max-width: 74rem;
+  max-width: 78rem;
   margin-inline: auto;
 }
 
@@ -993,20 +990,11 @@ html.has-cursor input, html.has-cursor textarea { cursor: text !important; }
   .brand-orbit .orbit-logo { width: 6rem; height: 3.4rem; }
 }
 
-.brand-orbit__row--top,
-.brand-orbit__row--bottom {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding-inline: 4%;
-}
-.brand-orbit__row--top { grid-area: top; }
-.brand-orbit__row--bottom { grid-area: bottom; }
 .brand-orbit__col {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  gap: 3.5rem;
+  gap: 1.6rem;
 }
 .brand-orbit__col--left { grid-area: left; align-items: flex-end; }
 .brand-orbit__col--right { grid-area: right; align-items: flex-start; }
@@ -1153,14 +1141,10 @@ html.has-cursor input, html.has-cursor textarea { cursor: text !important; }
     padding: 0;
   }
   /* names ring the wall on mobile too: top row above, the rest below */
-  .brand-orbit__row--top { order: -2; }
   .brand-orbit__col--left { order: 2; }
   .brand-orbit__col--right { order: 3; }
-  .brand-orbit__row--bottom { order: 4; }
   .brand-orbit { row-gap: 0.9rem; }
   .brand-wall { margin-bottom: 1.5rem; }
-  /* dots lead the text in the stacked list, matching the other rows */
-  .brand-orbit__col--left li { flex-direction: row-reverse; }
 }
 
 @media (max-width: 560px) {
