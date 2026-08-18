@@ -1286,6 +1286,20 @@ html.has-cursor input, html.has-cursor textarea { cursor: text !important; }
   height: 100%;
   object-fit: cover;
 }
+.split__visual--reel {
+  aspect-ratio: 3 / 4;
+  background: #000;
+  width: 100%;
+  max-width: 25rem;
+  justify-self: center;
+}
+.split__visual--reel video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
 
 .faq { border-top: 1px solid var(--line); }
 .faq details { border-bottom: 1px solid var(--line); }
