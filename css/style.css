@@ -652,6 +652,24 @@ html.has-cursor input, html.has-cursor textarea { cursor: text !important; }
 }
 @keyframes marquee-scroll { to { transform: translateX(-50%); } }
 
+/* Logo marquee — brand chips sliding under the hero */
+.marquee--logos .marquee__track { animation-duration: 38s; }
+.marquee__item--logos {
+  gap: clamp(1.75rem, 3.5vw, 3rem);
+  letter-spacing: 0;
+}
+.marquee__item--logos img {
+  height: 3.3rem;
+  width: 6rem;
+  object-fit: contain;
+  background: #000;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 0.4rem 0.6rem;
+  flex-shrink: 0;
+}
+.marquee__item--logos img.light { background: var(--ivory); }
+
 /* ------------------------------------------------------------
    Editorial statement
    ------------------------------------------------------------ */
