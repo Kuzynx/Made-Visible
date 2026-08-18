@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://madevisiblemv.com/sitemap.xml
