@@ -5,6 +5,9 @@
 The official website for Made Visible — a full-service marketing agency helping
 businesses become seen, found, recognized, and remembered.
 
+**Live:** https://madevisiblemv.com (GitHub Pages + Cloudflare, deployed
+automatically from `main` by `.github/workflows/deploy-pages.yml`)
+
 ## Pages
 
 | Page | File |
@@ -15,16 +18,15 @@ businesses become seen, found, recognized, and remembered.
 | Clients Made Visible (Case Studies) | `clients.html` |
 | About | `about.html` |
 | Make Me Visible (Contact) | `make-me-visible.html` |
+| Privacy Policy | `privacy.html` |
+| 404 | `404.html` |
 
 ## Brand system
 
-- **Obsidian** `#0A0A0A` — main background
-- **Ivory** `#F2EFE7` — main text
-- **Stone** `#AAA69D` — secondary text
-- **Champagne** `#C6AE82` — premium accent (used sparingly, on purpose)
-- **Charcoal** `#1B1B1B` — cards and secondary surfaces
-- **Manrope** — logo, headlines, UI, body
-- **Cormorant Garamond Medium Italic** — editorial accent words only
+- **Obsidian** `#0A0A0A` — main background · **Ivory** `#F2EFE7` — main text
+- **Stone** `#AAA69D` — secondary text · **Champagne** `#C6AE82` — premium accent
+- **Charcoal** `#1B1B1B` — cards and surfaces
+- **Manrope** — logo, headlines, UI, body · **Cormorant Garamond Medium Italic** — editorial accents
 
 ## Tech
 
@@ -32,21 +34,25 @@ Static site — no build step. Open `index.html` or serve the folder:
 
 ```bash
 python3 -m http.server 8000
-# → http://localhost:8000
 ```
 
-Libraries (loaded from CDN):
+Libraries (vendored in `js/vendor/` — no CDN dependency):
 
-- **Three.js** — 3D hero: drag-to-spin antique camera model in a particle field ("Antique Camera" by Maximillan Kamps / UX3D, CC0, via the Khronos glTF Sample Assets; optimized with glTF-Transform)
-- **GSAP + ScrollTrigger** — scroll reveals, line-mask headlines, parallax, word-by-word statements, animated counters
+- **Three.js r147 + GLTFLoader** — drag-to-spin 3D camera hero ("Antique Camera"
+  by Maximillan Kamps / UX3D, CC0, via the Khronos glTF Sample Assets;
+  optimized with glTF-Transform to `assets/camera.glb`)
+- **GSAP + ScrollTrigger** — scroll reveals, line-mask headlines, parallax,
+  word-by-word statements, animated counters, entry sequence
 - **Lenis** — smooth scrolling
 
-All animations respect `prefers-reduced-motion`, and the site degrades gracefully
-if any CDN script fails to load.
+All animations respect `prefers-reduced-motion` and degrade gracefully if a
+script fails to load.
 
-## Notes
+## Operations
 
-- The inquiry form on `make-me-visible.html` is front-end only — wire the
-  `<form>` to your backend, Formspree, Netlify Forms, or similar.
-- Portfolio visuals are abstract brand-gradient placeholders; replace the
-  `.visual-*` elements with real client photography as case studies are approved.
+- **Inquiry form** delivers to `madevisiblemv@gmail.com` via FormSubmit
+  (activated); client-side validation + honeypot included
+- **Link previews**: Open Graph/Twitter tags on every page; share card at
+  `assets/og-card.jpg`
+- **SEO**: `sitemap.xml`, `robots.txt`, canonical URLs
+- Client photography, logos and case-study assets live in `assets/`
