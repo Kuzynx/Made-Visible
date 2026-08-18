@@ -492,6 +492,20 @@ html.has-cursor input, html.has-cursor textarea { cursor: text !important; }
   padding-top: 6rem;
 }
 
+.hero__bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background: url(../assets/home-bg.jpg) center / cover no-repeat;
+  opacity: 0.55;
+  animation: hero-bg-drift 36s ease-in-out infinite alternate;
+  pointer-events: none;
+}
+@keyframes hero-bg-drift {
+  from { transform: scale(1); }
+  to { transform: scale(1.07); }
+}
+
 .hero__canvas {
   position: absolute;
   inset: 0;
