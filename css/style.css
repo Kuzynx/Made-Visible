@@ -490,6 +490,8 @@ html.has-cursor input, html.has-cursor textarea { cursor: text !important; }
   position: relative;
   overflow: hidden;
   padding-top: 6rem;
+  /* keep centered content clear of the brand band pinned to the bottom */
+  padding-bottom: 8rem;
 }
 
 .hero__video {
@@ -673,6 +675,18 @@ html.has-cursor input, html.has-cursor textarea { cursor: text !important; }
 
 /* Logo marquee — brand chips sliding under the hero */
 .marquee--logos .marquee__track { animation-duration: 38s; }
+.marquee--hero {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 2;
+  border-bottom: none;
+  border-top: 1px solid rgba(198, 174, 130, 0.14);
+  padding-block: 1.1rem;
+  background: linear-gradient(to top, rgba(10, 10, 10, 0.72), rgba(10, 10, 10, 0.25) 70%, transparent);
+}
+.marquee--hero .marquee__item--logos img { height: 2.9rem; width: 5.4rem; }
 .marquee__item--logos {
   gap: clamp(1.75rem, 3.5vw, 3rem);
   letter-spacing: 0;
