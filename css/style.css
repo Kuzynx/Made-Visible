@@ -1036,7 +1036,8 @@ html.has-cursor input, html.has-cursor textarea { cursor: text !important; }
 .brand-wall {
   grid-area: wall;
   position: relative;
-  aspect-ratio: 16 / 9;
+  /* match brand-wall.jpg's native 3:2 so nothing is cropped */
+  aspect-ratio: 3 / 2;
   border-radius: 8px;
   overflow: hidden;
   background:
@@ -1793,8 +1794,9 @@ html.has-cursor input, html.has-cursor textarea { cursor: text !important; }
   margin-top: clamp(3rem, 6vw, 5rem);
 }
 .team-member__photo {
-  aspect-ratio: 3 / 4;
-  max-width: 26rem;
+  /* match the portraits' native 2:3 so faces aren't cropped */
+  aspect-ratio: 2 / 3;
+  max-width: 24rem;
   width: 100%;
   border: 1px solid var(--line);
 }
