@@ -1830,7 +1830,55 @@ html.has-cursor input, html.has-cursor textarea { cursor: text !important; }
    Legal pages (privacy policy)
    ------------------------------------------------------------ */
 
+.legal-layout {
+  display: grid;
+  grid-template-columns: 16rem minmax(0, 1fr);
+  gap: clamp(2.5rem, 6vw, 5.5rem);
+  align-items: start;
+}
+.legal-toc {
+  position: sticky;
+  top: 7.5rem;
+}
+.legal-toc nav { display: flex; flex-direction: column; }
+.legal-toc a {
+  display: block;
+  padding: 0.38rem 0 0.38rem 1rem;
+  border-left: 1px solid var(--line);
+  font-size: 0.78rem;
+  letter-spacing: 0.02em;
+  color: var(--stone);
+  transition: color 0.3s ease, border-color 0.3s ease, padding-left 0.3s var(--ease-out);
+}
+.legal-toc a:hover {
+  color: var(--ivory);
+  border-color: rgba(198, 174, 130, 0.5);
+}
+.legal-toc a.is-active {
+  color: var(--champagne);
+  border-color: var(--champagne);
+  padding-left: 1.35rem;
+}
+@media (max-width: 900px) {
+  .legal-layout { grid-template-columns: 1fr; }
+  .legal-toc { position: static; }
+  .legal-toc nav {
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 0.5rem 0.75rem;
+  }
+  .legal-toc a,
+  .legal-toc a.is-active {
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    padding: 0.4rem 0.9rem;
+    font-size: 0.72rem;
+  }
+  .legal-toc a.is-active { border-color: var(--champagne); }
+}
+
 .legal { max-width: 52rem; }
+.legal h2 { scroll-margin-top: 7rem; }
 .legal p {
   color: var(--stone);
   font-size: 0.95rem;
