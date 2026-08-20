@@ -129,6 +129,43 @@
   }
 
   /* ----------------------------------------------------------
+     Legal page TOC — smooth-scroll to sections, highlight the
+     one currently in view
+     ---------------------------------------------------------- */
+  const tocLinks = document.querySelectorAll(".legal-toc a[href^='#']");
+  if (tocLinks.length) {
+    tocLinks.forEach((a) => {
+      a.addEventListener("click", (e) => {
+        const target = document.querySelector(a.getAttribute("href"));
+        if (!target) return;
+        e.preventDefault();
+        const y = target.getBoundingClientRect().top + window.scrollY - 110;
+        if (lenis) lenis.scrollTo(y);
+        else window.scrollTo({ top: y, behavior: "smooth" });
+        history.replaceState(null, "", a.getAttribute("href"));
+      });
+    });
+    if ("IntersectionObserver" in window) {
+      const map = new Map();
+      tocLinks.forEach((a) => {
+        const sec = document.querySelector(a.getAttribute("href"));
+        if (sec) map.set(sec, a);
+      });
+      let current = null;
+      const setActive = (a) => {
+        if (current === a) return;
+        tocLinks.forEach((l) => l.classList.remove("is-active"));
+        if (a) a.classList.add("is-active");
+        current = a;
+      };
+      const io = new IntersectionObserver((entries) => {
+        entries.forEach((en) => { if (en.isIntersecting) setActive(map.get(en.target)); });
+      }, { rootMargin: "-15% 0px -70% 0px" });
+      map.forEach((_, sec) => io.observe(sec));
+    }
+  }
+
+  /* ----------------------------------------------------------
      Autoplay videos — browsers pause (or never start) offscreen
      and post-navigation autoplay, so drive playback explicitly:
      play when visible, pause when not, and if autoplay is blocked
