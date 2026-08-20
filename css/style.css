@@ -492,14 +492,19 @@ html.has-cursor input, html.has-cursor textarea { cursor: text !important; }
   padding-top: 6rem;
 }
 
-.hero__bg {
+.hero__video {
   position: absolute;
   inset: 0;
   z-index: 0;
-  background: url(../assets/home-bg.jpg) center / cover no-repeat;
-  opacity: 0.55;
-  animation: hero-bg-drift 36s ease-in-out infinite alternate;
+  overflow: hidden;
   pointer-events: none;
+}
+.hero__video video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.45;
+  animation: hero-bg-drift 36s ease-in-out infinite alternate;
 }
 @keyframes hero-bg-drift {
   from { transform: scale(1); }
