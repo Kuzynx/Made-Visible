@@ -68,11 +68,14 @@
 
     <!-- HERO -->
     <section class="hero">
-      <div class="hero__bg" aria-hidden="true"></div>
-      <div class="hero__canvas" aria-hidden="true"></div>
+      <div class="hero__video" aria-hidden="true">
+        <video autoplay muted loop playsinline preload="auto" poster="assets/home-reel-poster.jpg">
+          <source src="assets/home-reel.webm" type="video/webm">
+          <source src="assets/home-reel.mp4" type="video/mp4">
+        </video>
+      </div>
       <div class="hero__vignette" aria-hidden="true"></div>
       <div class="hero__sweep" aria-hidden="true"></div>
-      <div class="hero__drag-hint" aria-hidden="true" data-hero-fade style="opacity:0;"><span class="arrows">←</span> Drag to spin <span class="arrows">→</span></div>
 
       <div class="container hero__content">
         <p class="label hero__label" data-hero-fade style="opacity:0; transform:translateY(20px);">Full-Service Marketing Agency</p>
@@ -135,35 +138,6 @@
             <span class="word serif champagne">recognized</span> <span class="word">and</span>
             <span class="word serif champagne">remembered.</span>
           </p>
-        </div>
-      </div>
-    </section>
-
-    <!-- SHOWREEL — CENTERPIECE -->
-    <section class="section section--line-top showreel">
-      <div class="container">
-        <div class="section-head" style="align-items:center; text-align:center;">
-          <p class="label label--bare" data-reveal>In Motion</p>
-          <h2 class="display-lg" data-reveal-line>
-            <span class="line"><span>Thirty seconds of</span></span>
-            <span class="line"><span><em class="serif champagne">our clients’ feeds.</em></span></span>
-          </h2>
-        </div>
-        <div class="showreel__stage" data-reveal>
-          <div class="showreel__glow" aria-hidden="true"></div>
-          <div class="showreel__frame" data-tilt>
-            <video autoplay muted loop playsinline preload="metadata" poster="assets/home-reel-poster.jpg" aria-label="Made Visible showreel: client content from automotive, grooming and restaurant brands">
-              <source src="assets/home-reel.webm" type="video/webm">
-              <source src="assets/home-reel.mp4" type="video/mp4">
-            </video>
-          </div>
-        </div>
-        <p class="lead showreel__lead" data-reveal>
-          A supercar’s cockpit. A barber mid-cut. A steak hitting the grill.
-          Every frame shot, cut and published by Made Visible.
-        </p>
-        <div class="showreel__cta" data-reveal>
-          <a href="clients.html" class="btn btn--ghost">See The Results Behind It <span class="arrow">↗</span></a>
         </div>
       </div>
     </section>
@@ -428,8 +402,6 @@
     </div>
   </footer>
 
-  <script src="js/vendor/three.min.js"></script>
-  <script src="js/vendor/GLTFLoader.js"></script>
   <script src="js/vendor/lenis.min.js"></script>
   <script src="js/vendor/gsap.min.js"></script>
   <script src="js/vendor/ScrollTrigger.min.js"></script>
