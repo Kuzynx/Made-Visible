@@ -129,6 +129,42 @@
   }
 
   /* ----------------------------------------------------------
+     Autoplay videos — browsers pause (or never start) offscreen
+     and post-navigation autoplay, so drive playback explicitly:
+     play when visible, pause when not, and if autoplay is blocked
+     (e.g. iOS Low Power Mode) fall back to controls / first tap.
+     ---------------------------------------------------------- */
+  const autoVids = document.querySelectorAll("video[autoplay]");
+  if (autoVids.length) {
+    const tryPlay = (v) => {
+      const p = v.play();
+      if (p) p.catch(() => {
+        // background hero video can't be tapped — retry on first touch instead
+        if (v.closest(".hero__video")) return;
+        v.controls = true;
+      });
+    };
+    if ("IntersectionObserver" in window) {
+      const vio = new IntersectionObserver((entries) => {
+        entries.forEach((en) => {
+          if (en.isIntersecting) tryPlay(en.target);
+          else if (!en.target.paused) en.target.pause();
+        });
+      }, { threshold: 0.15 });
+      autoVids.forEach((v) => vio.observe(v));
+    } else {
+      autoVids.forEach(tryPlay);
+    }
+    const inView = (v) => {
+      const r = v.getBoundingClientRect();
+      return r.bottom > 0 && r.top < window.innerHeight;
+    };
+    const resume = () => autoVids.forEach((v) => { if (v.paused && inView(v)) tryPlay(v); });
+    document.addEventListener("touchend", resume, { once: true, passive: true });
+    document.addEventListener("visibilitychange", () => { if (!document.hidden) resume(); });
+  }
+
+  /* ----------------------------------------------------------
      Custom cursor
      ---------------------------------------------------------- */
   const cross = document.querySelector(".cursor-cross");
