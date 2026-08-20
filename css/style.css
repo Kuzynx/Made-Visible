@@ -1827,6 +1827,87 @@ html.has-cursor input, html.has-cursor textarea { cursor: text !important; }
 }
 
 /* ------------------------------------------------------------
+   Legal pages (privacy policy)
+   ------------------------------------------------------------ */
+
+.legal { max-width: 52rem; }
+.legal p {
+  color: var(--stone);
+  font-size: 0.95rem;
+  line-height: 1.8;
+  margin-top: 1.1rem;
+}
+.legal h2 {
+  margin-top: 3rem;
+  font-size: clamp(1.1rem, 2vw, 1.35rem);
+  font-weight: 700;
+  color: var(--ivory);
+  letter-spacing: 0.01em;
+}
+.legal h2 .num {
+  color: var(--champagne);
+  font-weight: 500;
+  margin-right: 0.5rem;
+}
+.legal ul {
+  list-style: none;
+  margin-top: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+.legal li {
+  color: var(--stone);
+  font-size: 0.95rem;
+  line-height: 1.7;
+  padding-left: 1.4rem;
+  position: relative;
+}
+.legal li::before {
+  content: "—";
+  position: absolute;
+  left: 0;
+  color: var(--champagne);
+  opacity: 0.8;
+}
+.legal a { color: var(--champagne); }
+.legal__copyright {
+  margin-top: 3.5rem;
+  padding-top: 2rem;
+  border-top: 1px solid var(--line);
+  font-size: 0.82rem;
+  letter-spacing: 0.06em;
+}
+
+/* Privacy Policy button (footer) */
+.site-footer__legal {
+  display: inline-flex;
+  align-items: center;
+  gap: 1.25rem;
+}
+.btn-privacy {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.5rem 1.15rem;
+  border: 1px solid rgba(198, 174, 130, 0.35);
+  border-radius: 999px;
+  font-size: 0.66rem;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--stone);
+  transition: color 0.3s ease, border-color 0.3s ease, background 0.3s ease;
+}
+.btn-privacy:hover {
+  color: var(--champagne);
+  border-color: var(--champagne);
+  background: rgba(198, 174, 130, 0.07);
+}
+@media (max-width: 640px) {
+  .site-footer__legal { gap: 0.9rem; flex-wrap: wrap; }
+}
+
+/* ------------------------------------------------------------
    Reveal animation primitives (driven by JS)
    ------------------------------------------------------------ */
 
