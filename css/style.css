@@ -1274,7 +1274,9 @@ html.has-cursor input, html.has-cursor textarea { cursor: text !important; }
    Split visuals with real imagery + FAQ accordion
    ------------------------------------------------------------ */
 
-.split__visual--square { aspect-ratio: 1 / 1; }
+/* double-class so these beat the base .split__visual rule declared later */
+.split__visual.split__visual--square { aspect-ratio: 1 / 1; }
+.split__visual.split__visual--wide { aspect-ratio: 3 / 2; }
 .split__visual .cover {
   position: absolute;
   inset: 0;
@@ -1294,7 +1296,7 @@ html.has-cursor input, html.has-cursor textarea { cursor: text !important; }
   max-height: 70%;
   object-fit: contain;
 }
-.split__visual--video {
+.split__visual.split__visual--video {
   aspect-ratio: 16 / 9;
   background: #000;
 }
