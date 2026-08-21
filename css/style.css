@@ -1224,41 +1224,6 @@ html.has-cursor input, html.has-cursor textarea { cursor: text !important; }
   box-shadow: 0 18px 45px rgba(0, 0, 0, 0.45);
 }
 
-/* Typographic work card (no imagery available yet) */
-.work-item__visual--type {
-  background:
-    radial-gradient(ellipse 80% 60% at 70% 25%, rgba(198, 174, 130, 0.16), transparent 60%),
-    var(--charcoal);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 1.1rem;
-  text-align: center;
-  padding: 2rem;
-}
-.type-card__label {
-  font-size: 0.64rem;
-  font-weight: 600;
-  letter-spacing: 0.28em;
-  text-transform: uppercase;
-  color: var(--stone);
-}
-.type-card__name {
-  font-size: clamp(1.8rem, 3.4vw, 2.8rem);
-  font-style: italic;
-  line-height: 1.15;
-  color: var(--champagne);
-}
-.type-card__tag {
-  font-size: 0.7rem;
-  font-weight: 500;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: var(--ivory);
-  opacity: 0.75;
-}
-
 /* Receipts — real screenshots as proof */
 .receipts-stack { display: flex; flex-direction: column; gap: 1rem; }
 .receipt-card {
