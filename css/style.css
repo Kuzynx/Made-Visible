@@ -1974,4 +1974,10 @@ html.has-cursor input, html.has-cursor textarea { cursor: text !important; }
   }
   [data-reveal] { opacity: 1; transform: none; }
   [data-reveal-line] .line > span { transform: none; }
+  /* keep the logo marquees drifting — slow and linear, and at a
+     gentler pace than the default */
+  .marquee__track {
+    animation-duration: 70s !important;
+    animation-iteration-count: infinite !important;
+  }
 }

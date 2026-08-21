@@ -375,6 +375,14 @@
     document.querySelectorAll("[data-reveal-line] .line > span, .hero__title .line > span").forEach((s) => { s.style.transform = "none"; });
     document.querySelectorAll("[data-hero-fade]").forEach((el) => { el.style.opacity = 1; el.style.transform = "none"; });
     document.querySelectorAll(".statement .word").forEach((w) => w.classList.add("is-lit"));
+    // counters can't animate — write their final values directly
+    document.querySelectorAll("[data-count]").forEach((el) => {
+      const decimals = parseInt(el.dataset.decimals || "0", 10);
+      el.textContent = parseFloat(el.dataset.count).toLocaleString("en-US", {
+        minimumFractionDigits: decimals,
+        maximumFractionDigits: decimals,
+      });
+    });
   }
 
   /* ----------------------------------------------------------
