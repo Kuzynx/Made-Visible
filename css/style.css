@@ -1927,6 +1927,15 @@ html.has-cursor input, html.has-cursor textarea { cursor: text !important; }
   letter-spacing: 0.06em;
 }
 
+.site-footer__loc {
+  margin-top: 1.1rem;
+  font-size: 0.72rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--stone);
+  opacity: 0.8;
+}
+
 /* Privacy Policy button (footer) */
 .site-footer__legal {
   display: inline-flex;
