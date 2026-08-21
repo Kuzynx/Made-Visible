@@ -1208,16 +1208,55 @@ html.has-cursor input, html.has-cursor textarea { cursor: text !important; }
   object-fit: cover;
 }
 .work-item__visual--logo {
-  background: var(--ivory);
+  background:
+    radial-gradient(ellipse 80% 70% at 50% 30%, rgba(198, 174, 130, 0.1), transparent 65%),
+    var(--charcoal);
   display: flex;
   align-items: center;
   justify-content: center;
   padding: clamp(2rem, 5vw, 3.5rem);
 }
 .work-item__visual--logo img {
-  max-width: 80%;
-  max-height: 70%;
-  object-fit: contain;
+  width: min(62%, 20rem);
+  height: auto;
+  border-radius: 10px;
+  border: 1px solid rgba(198, 174, 130, 0.28);
+  box-shadow: 0 18px 45px rgba(0, 0, 0, 0.45);
+}
+
+/* Typographic work card (no imagery available yet) */
+.work-item__visual--type {
+  background:
+    radial-gradient(ellipse 80% 60% at 70% 25%, rgba(198, 174, 130, 0.16), transparent 60%),
+    var(--charcoal);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1.1rem;
+  text-align: center;
+  padding: 2rem;
+}
+.type-card__label {
+  font-size: 0.64rem;
+  font-weight: 600;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--stone);
+}
+.type-card__name {
+  font-size: clamp(1.8rem, 3.4vw, 2.8rem);
+  font-style: italic;
+  line-height: 1.15;
+  color: var(--champagne);
+}
+.type-card__tag {
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ivory);
+  opacity: 0.75;
 }
 
 /* Receipts — real screenshots as proof */
