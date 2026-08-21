@@ -1927,6 +1927,20 @@ html.has-cursor input, html.has-cursor textarea { cursor: text !important; }
   letter-spacing: 0.06em;
 }
 
+.brand-card {
+  max-width: 72rem;
+  margin-inline: auto;
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid rgba(198, 174, 130, 0.2);
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.5);
+}
+.brand-card img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
 .site-footer__loc {
   margin-top: 1.1rem;
   font-size: 0.72rem;
